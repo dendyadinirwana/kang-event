@@ -132,11 +132,11 @@ function RABSection({ section }) {
                     <table>
                         <thead>
                             <tr>
-                                <th style={{ width: '36%' }}>Uraian</th>
-                                <th style={{ width: '8%' }}>Vol</th>
-                                <th style={{ width: '14%' }}>Satuan</th>
-                                <th style={{ width: '18%' }}>Harga Satuan</th>
-                                <th style={{ width: '18%' }}>Total</th>
+                                <th style={{ width: '28%' }}>Uraian</th>
+                                <th style={{ width: '10%' }}>Vol</th>
+                                <th style={{ width: '16%' }}>Satuan</th>
+                                <th style={{ width: '22%' }}>Harga Satuan</th>
+                                <th style={{ width: '24%' }}>Total</th>
                             </tr>
                         </thead>
                         <tbody>

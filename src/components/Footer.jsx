@@ -12,7 +12,8 @@ export default function Footer() {
                     />
                 </div>
                 <div className="footer-text">
-                    © 2026 | Aplikasi ini disusun dan dibuat untuk kebutuhan internal Direktorat Penyerasian Rencana dan Program Percepatan Pembangunan Daerah Tertinggal, Direktorat Jenderal Percepatan Pembangunan Daerah Tertinggal, Kementerian Desa dan Pembangunan Daerah Tertinggal Republik Indonesia.
+                    © 2026 | Aplikasi ini disusun dan dibuat untuk kebutuhan internal Direktorat Penyerasian Rencana dan Program <br />
+                    Percepatan Pembangunan Daerah Tertinggal, Direktorat Jenderal Percepatan Pembangunan Daerah Tertinggal, Kementerian Desa dan Pembangunan Daerah Tertinggal Republik Indonesia.
                 </div>
             </div>
         </footer>

@@ -71,18 +71,6 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
                 </div>
             </div>
 
-            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
-                <button className="gen-btn" style={{ background: '#2d7d52', margin: 0, flex: 1, minWidth: '200px' }} onClick={copyRAB}>
-                    📄 Copy Tabel RAB
-                </button>
-                <button className="gen-btn" style={{ background: '#b5860d', margin: 0, flex: 1, minWidth: '200px' }} onClick={() => window.print()}>
-                    🖨️ Save as PDF
-                </button>
-                <button className="gen-btn" style={{ background: '#6b7280', margin: 0, flex: 1, minWidth: '200px' }} onClick={() => window.location.reload()}>
-                    🔄 Reset Data
-                </button>
-            </div>
-
             <div id="rab-container">
                 {sections.map((sec, idx) => (
                     <RABSection key={idx} section={sec} />
@@ -110,6 +98,18 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
                         ))}
                     </div>
                 ))}
+            </div>
+
+            <div className="claude-btn-container">
+                <button className="claude-btn claude-btn-secondary" onClick={copyRAB}>
+                    <span style={{ fontSize: '16px' }}>📋</span> Copy Tabel RAB
+                </button>
+                <button className="claude-btn claude-btn-primary" onClick={() => window.print()}>
+                    <span style={{ fontSize: '16px' }}>🖨️</span> Save as PDF
+                </button>
+                <button className="claude-btn claude-btn-secondary" onClick={() => window.location.reload()}>
+                    <span style={{ fontSize: '16px' }}>🔄</span> Reset Data
+                </button>
             </div>
 
         </div>

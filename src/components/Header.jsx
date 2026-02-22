@@ -1,8 +1,8 @@
 export default function Header() {
     return (
-        <header>
-            <div className="logo-text">
-                <h1 style={{ fontWeight: 'normal' }}>Event Checklist, Perlengkapan &amp; RAB Generator</h1>
+        <header style={{ justifyContent: 'center' }}>
+            <div className="logo-text" style={{ textAlign: 'center', width: '100%' }}>
+                <h1 className="app-title">Event Checklist, Perlengkapan &amp; RAB Generator</h1>
             </div>
         </header>
     );

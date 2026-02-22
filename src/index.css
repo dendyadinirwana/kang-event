@@ -1412,3 +1412,59 @@
         text-align: center;
       }
     }
+
+    /* CLAUDE UI STYLES */
+    .app-title {
+      font-family: 'Anthropic Serif', serif;
+      font-size: 26px;
+      font-weight: 500;
+      width: 330px;
+      margin: 0 auto;
+      text-align: center;
+      line-height: 1.35;
+      color: var(--text);
+    }
+
+    .claude-btn-container {
+      display: flex;
+      gap: 12px;
+      margin-top: 32px;
+      margin-bottom: 24px;
+      flex-wrap: wrap;
+    }
+
+    .claude-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 18px;
+      font-family: 'Anthropic Sans', sans-serif;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 8px;
+      border: 1px solid transparent;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .claude-btn-primary {
+      background-color: var(--text);
+      color: #ffffff;
+    }
+
+    .claude-btn-primary:hover {
+      background-color: #3b3731;
+    }
+
+    .claude-btn-secondary {
+      background-color: #f0eee9;
+      color: var(--text);
+      border-color: var(--border);
+    }
+
+    .claude-btn-secondary:hover {
+      background-color: #e6e3dd;
+    }

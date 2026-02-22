@@ -140,9 +140,11 @@ export default function App() {
 
       <Disclaimer />
 
-      <button className="gen-btn" onClick={generateRAB}>
-        <span>✨</span> Generate RAB &amp; Perlengkapan
-      </button>
+      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+        <button className="claude-btn claude-btn-primary" onClick={generateRAB} style={{ padding: '14px 24px', fontSize: '15px' }}>
+          <span style={{ fontSize: '18px' }}>✨</span> Generate RAB &amp; Perlengkapan
+        </button>
+      </div>
 
       <div ref={resultRef}>
         {result && (

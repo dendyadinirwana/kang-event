@@ -71,9 +71,17 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
                 </div>
             </div>
 
-            <button className="gen-btn" style={{ marginBottom: '24px', background: '#2d7d52' }} onClick={copyRAB}>
-                📄 Copy Tabel RAB ke Excel / Word
-            </button>
+            <div style={{ display: 'flex', gap: '12px', marginBottom: '24px', flexWrap: 'wrap' }}>
+                <button className="gen-btn" style={{ background: '#2d7d52', margin: 0, flex: 1, minWidth: '200px' }} onClick={copyRAB}>
+                    📄 Copy Tabel RAB
+                </button>
+                <button className="gen-btn" style={{ background: '#b5860d', margin: 0, flex: 1, minWidth: '200px' }} onClick={() => window.print()}>
+                    🖨️ Save as PDF
+                </button>
+                <button className="gen-btn" style={{ background: '#6b7280', margin: 0, flex: 1, minWidth: '200px' }} onClick={() => window.location.reload()}>
+                    🔄 Reset Data
+                </button>
+            </div>
 
             <div id="rab-container">
                 {sections.map((sec, idx) => (
@@ -160,8 +168,8 @@ function ChecklistItem({ text }) {
     const [done, setDone] = useState(false);
 
     return (
-        <div className={`cl-item ${done ? 'done' : ''}`}>
-            <div className="cl-check" onClick={() => setDone(!done)}></div>
+        <div className={`cl-item ${done ? 'done' : ''}`} onClick={() => setDone(!done)} style={{ cursor: 'pointer' }}>
+            <div className="cl-check"></div>
             <div className="cl-text">{text}</div>
             <div className="cl-pic-wrap">
                 <span className="cl-pic-label" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>PIC:</span>

@@ -1,7 +1,6 @@
 export default function EventDetails({ data, onChange }) {
     return (
         <>
-            <div className="sec-label">01 — Detail Acara</div>
             <div className="card">
                 <div className="card-title">
                     <span className="icon">🎯</span> Jenis &amp; Skala Acara

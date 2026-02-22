@@ -58,9 +58,10 @@
     }
 
     .wrapper {
+      width: 100%;
       max-width: 680px;
       margin: 0 auto;
-      padding: 36px 0 60px;
+      padding: 36px 20px 60px;
     }
 
     /* HEADER */
@@ -1413,6 +1414,35 @@
         gap: 8px;
         text-align: center;
       }
+
+      .app-title {
+        font-size: 28px !important;
+        line-height: 1.25 !important;
+      }
+
+      .claude-btn-container {
+        flex-direction: column;
+      }
+
+      .wrapper {
+        padding: 24px 16px 40px;
+      }
+
+      .field input,
+      .field select,
+      .field textarea {
+        min-height: 44px;
+        font-size: 14px;
+      }
+
+      .toggle-chip {
+        padding: 10px 14px;
+        font-size: 13.5px;
+      }
+
+      .cl-item {
+        padding: 14px 0;
+      }
     }
 
     /* CLAUDE UI STYLES */
@@ -1420,7 +1450,8 @@
       font-family: 'Anthropic Serif', serif;
       font-size: 40px;
       font-weight: 330;
-      width: 680px;
+      width: 100%;
+      max-width: 680px;
       margin: 0 auto;
       text-align: center;
       line-height: 1.35;

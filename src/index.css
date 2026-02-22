@@ -1,3 +1,27 @@
+    @font-face {
+      font-family: 'Anthropic Mono';
+      src: url('https://assets-proxy.anthropic.com/claude-ai/v1/_next/static/media/5ab84f5ed5bd55bd-s.p.woff2') format('woff2');
+      font-weight: 400 700;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Anthropic Sans';
+      src: url('https://assets-proxy.anthropic.com/claude-ai/v1/_next/static/media/01d1396bd69a228a-s.p.woff2') format('woff2');
+      font-weight: 300 800;
+      font-style: normal;
+      font-display: swap;
+    }
+
+    @font-face {
+      font-family: 'Anthropic Serif';
+      src: url('https://assets-proxy.anthropic.com/claude-ai/v1/_next/static/media/fe66948be403232d-s.p.woff2') format('woff2');
+      font-weight: 300 800;
+      font-style: normal;
+      font-display: swap;
+    }
+
     :root {
       --bg: #f9f7f4;
       --surface: #ffffff;
@@ -27,7 +51,7 @@
     }
 
     body {
-      font-family: 'IBM Plex Sans', sans-serif;
+      font-family: 'Anthropic Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -47,12 +71,13 @@
       margin-bottom: 32px;
       padding-bottom: 20px;
       border-bottom: 2px solid var(--border);
+      font-family: 'Anthropic Serif', serif;
     }
 
 
     /* SECTION LABEL */
     .sec-label {
-      font-family: 'IBM Plex Mono', monospace;
+      font-family: 'Anthropic Mono', monospace;
       font-size: 9.5px;
       font-weight: 600;
       letter-spacing: 2px;
@@ -72,7 +97,8 @@
     }
 
     .card-title {
-      font-size: 13.5px;
+      font-family: 'Anthropic Serif', serif;
+      font-size: 14.5px;
       font-weight: 600;
       color: var(--text);
       margin-bottom: 16px;

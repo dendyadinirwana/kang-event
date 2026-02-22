@@ -1,4 +1,5 @@
-import { logoBase64_0 } from '../assets/logoBase64';
+import logoPPDT from '../assets/logo-ppdt.png';
+import logoPRP from '../assets/logo-prp.png';
 
 export default function Footer() {
     return (
@@ -6,8 +7,13 @@ export default function Footer() {
             <div className="footer-inner">
                 <div className="footer-logo-wrap">
                     <img
-                        src={logoBase64_0}
+                        src={logoPPDT}
                         alt="Logo DITJEN PPDT"
+                        className="footer-logo"
+                    />
+                    <img
+                        src={logoPRP}
+                        alt="Logo DitPRP"
                         className="footer-logo"
                     />
                 </div>

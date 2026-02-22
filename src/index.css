@@ -1366,8 +1366,10 @@
 
       .gen-btn,
       .action-bar,
-      header .logo-text p {
-        display: none;
+      header .logo-text p,
+      .claude-btn-container,
+      .site-footer {
+        display: none !important;
       }
 
       #result {

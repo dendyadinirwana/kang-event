@@ -146,6 +146,8 @@ export default function App() {
         </button>
       </div>
 
+      <div style={{ borderBottom: '2px solid var(--border)', margin: '32px 0' }}></div>
+
       <div ref={resultRef}>
         {result && (
           <RABResult

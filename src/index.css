@@ -1416,9 +1416,9 @@
     /* CLAUDE UI STYLES */
     .app-title {
       font-family: 'Anthropic Serif', serif;
-      font-size: 26px;
-      font-weight: 500;
-      width: 330px;
+      font-size: 40px;
+      font-weight: 330;
+      width: 680px;
       margin: 0 auto;
       text-align: center;
       line-height: 1.35;

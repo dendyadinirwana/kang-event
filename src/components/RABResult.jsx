@@ -104,11 +104,11 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
                 <button className="claude-btn claude-btn-secondary" onClick={copyRAB}>
                     <span style={{ fontSize: '16px' }}>📋</span> Copy Tabel RAB
                 </button>
-                <button className="claude-btn claude-btn-primary" onClick={() => window.print()}>
-                    <span style={{ fontSize: '16px' }}>🖨️</span> Save as PDF
-                </button>
                 <button className="claude-btn claude-btn-secondary" onClick={() => window.location.reload()}>
                     <span style={{ fontSize: '16px' }}>🔄</span> Reset Data
+                </button>
+                <button className="claude-btn claude-btn-primary" onClick={() => window.print()}>
+                    <span style={{ fontSize: '16px' }}>🖨️</span> Save as PDF
                 </button>
             </div>
 

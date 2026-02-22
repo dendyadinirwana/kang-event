@@ -128,37 +128,39 @@ function RABSection({ section }) {
                 <div className="rab-section-arrow">▼</div>
             </div>
             <div className={`rab-body ${open ? 'show' : ''}`}>
-                <table>
-                    <thead>
-                        <tr>
-                            <th style={{ width: '36%' }}>Uraian</th>
-                            <th style={{ width: '8%' }}>Vol</th>
-                            <th style={{ width: '14%' }}>Satuan</th>
-                            <th style={{ width: '18%' }}>Harga Satuan</th>
-                            <th style={{ width: '18%' }}>Total</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {section.items.map((it, i) => (
-                            <tr key={i}>
-                                <td>
-                                    {it.nama}
-                                    {it.note && <div className="td-note">{it.note}</div>}
-                                </td>
-                                <td className="td-num">{it.qty}</td>
-                                <td className="td-sat">{it.satuan}</td>
-                                <td className="td-harga">{rp(it.harga)}</td>
-                                <td>{rp(it.total)}</td>
+                <div className="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style={{ width: '36%' }}>Uraian</th>
+                                <th style={{ width: '8%' }}>Vol</th>
+                                <th style={{ width: '14%' }}>Satuan</th>
+                                <th style={{ width: '18%' }}>Harga Satuan</th>
+                                <th style={{ width: '18%' }}>Total</th>
                             </tr>
-                        ))}
-                    </tbody>
-                    <tfoot>
-                        <tr>
-                            <td colSpan="4">Subtotal {section.label}</td>
-                            <td>{rp(secTotal)}</td>
-                        </tr>
-                    </tfoot>
-                </table>
+                        </thead>
+                        <tbody>
+                            {section.items.map((it, i) => (
+                                <tr key={i}>
+                                    <td>
+                                        {it.nama}
+                                        {it.note && <div className="td-note">{it.note}</div>}
+                                    </td>
+                                    <td className="td-num">{it.qty}</td>
+                                    <td className="td-sat">{it.satuan}</td>
+                                    <td className="td-harga">{rp(it.harga)}</td>
+                                    <td>{rp(it.total)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                        <tfoot>
+                            <tr>
+                                <td colSpan="4">Subtotal {section.label}</td>
+                                <td>{rp(secTotal)}</td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                </div>
             </div>
         </div>
     );

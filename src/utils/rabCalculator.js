@@ -18,6 +18,10 @@ export const HARGA = {
     meja_registrasi: { nama: 'Meja Registrasi (sewa)', sat: 'unit/hari', harga: { jakarta: 100000, bandung: 80000, surabaya: 90000, yogyakarta: 75000, medan: 80000, makassar: 80000, daerah: 65000 } },
     partisi: { nama: 'Partisi Ruangan (sewa)', sat: 'panel/hari', harga: { jakarta: 75000, bandung: 60000, surabaya: 65000, yogyakarta: 55000, medan: 60000, makassar: 60000, daerah: 50000 } },
     karpet: { nama: 'Karpet Merah (sewa)', sat: 'm/hari', harga: { jakarta: 50000, bandung: 40000, surabaya: 45000, yogyakarta: 38000, medan: 40000, makassar: 40000, daerah: 35000 } },
+    // Mixed-seating specific furniture
+    sofa_lounge: { nama: 'Sofa Lounge / Kursi Eksklusif (sewa)', sat: 'unit/hari', harga: { jakarta: 250000, bandung: 200000, surabaya: 220000, yogyakarta: 185000, medan: 200000, makassar: 200000, daerah: 170000 } },
+    meja_bundar_banquet: { nama: 'Meja Bundar Banquet (sewa)', sat: 'unit/hari', harga: { jakarta: 180000, bandung: 145000, surabaya: 160000, yogyakarta: 130000, medan: 145000, makassar: 145000, daerah: 120000 } },
+    meja_cluster: { nama: 'Meja Cluster Cabaret (sewa)', sat: 'unit/hari', harga: { jakarta: 120000, bandung: 95000, surabaya: 105000, yogyakarta: 88000, medan: 95000, makassar: 95000, daerah: 80000 } },
 
     // Dekorasi
     backdrop: { nama: 'Backdrop / Spanduk Besar (produksi)', sat: 'm²', harga: { jakarta: 85000, bandung: 70000, surabaya: 75000, yogyakarta: 65000, medan: 70000, makassar: 70000, daerah: 60000 } },
@@ -145,7 +149,8 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
         vip = 0,
         team = [],
         decorChips = [],
-        seatingPref: seating = 'auto'
+        seatingPref: seating = 'auto',
+        mixedSeating = 'mixed_roundtable',
     } = input;
 
     const totalPeserta = peserta + vvip + vip;
@@ -157,6 +162,7 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     const hasVIP = vip > 0 || ['vip', 'vvip', 'campuran'].includes(guestClass);
     const hasSnack = duration >= 2;
     const hasMakan = duration >= 4;
+    const isMixed = guestClass === 'campuran';
 
     let formasi = seating;
     if (seating === 'auto') {
@@ -217,6 +223,59 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     if (evType !== 'gala') furn.push(row('podium', kota, hari, overrides));
     if (team.includes('registrasi')) furn.push(row('meja_registrasi', kota, 2 * hari, overrides, 'unit/hari', '2 meja registrasi'));
     if (decorChips.includes('karpet_merah') || hasVVIP) furn.push(row('karpet', kota, 10, overrides, 'm/hari', 'karpet merah protokol'));
+
+    // Mixed seating extra furniture — only for campuran guest class
+    if (isMixed && (vvip > 0 || vip > 0)) {
+        const mixedVipCount = vvip + vip;
+        if (mixedSeating === 'mixed_sofa_lounge') {
+            const sofaQty = Math.ceil(mixedVipCount / 2); // assume 2 per sofa
+            furn.push({
+                key: 'sofa_lounge',
+                nama: 'Sofa Lounge / Kursi Eksklusif – Zona VIP/VVIP (sewa)',
+                qty: sofaQty * hari,
+                satuan: 'unit/hari',
+                harga: h(kota, 'sofa_lounge', overrides),
+                total: h(kota, 'sofa_lounge', overrides) * sofaQty * hari,
+                note: `${sofaQty} sofa untuk ${mixedVipCount} tamu VIP/VVIP (zona terdepan)`
+            });
+        } else if (mixedSeating === 'mixed_banquet') {
+            const tableQty = Math.ceil(mixedVipCount / 8); // banquet 8 pax per table
+            furn.push({
+                key: 'meja_bundar_banquet',
+                nama: 'Meja Bundar Banquet – Head Table VIP/VVIP (sewa)',
+                qty: tableQty * hari,
+                satuan: 'unit/hari',
+                harga: h(kota, 'meja_bundar_banquet', overrides),
+                total: h(kota, 'meja_bundar_banquet', overrides) * tableQty * hari,
+                note: `${tableQty} meja @8 pax untuk ${mixedVipCount} tamu VIP/VVIP (head table)`
+            });
+        } else if (mixedSeating === 'mixed_cabaret') {
+            const clusterQty = Math.ceil(totalPeserta / 6); // cabaret ~6 per cluster
+            furn.push({
+                key: 'meja_cluster',
+                nama: 'Meja Cluster Cabaret (sewa)',
+                qty: clusterQty * hari,
+                satuan: 'unit/hari',
+                harga: h(kota, 'meja_cluster', overrides),
+                total: h(kota, 'meja_cluster', overrides) * clusterQty * hari,
+                note: `${clusterQty} meja @6 pax formasi cabaret`
+            });
+        } else if (mixedSeating === 'mixed_roundtable') {
+            // Round table mix: add separate round tables for VIP zone
+            const rtableQty = Math.ceil(mixedVipCount / 8);
+            furn.push({
+                key: 'meja_bundar_banquet',
+                nama: 'Meja Bundar – Zona VIP/VVIP Round Table Mix (sewa)',
+                qty: rtableQty * hari,
+                satuan: 'unit/hari',
+                harga: h(kota, 'meja_bundar_banquet', overrides),
+                total: h(kota, 'meja_bundar_banquet', overrides) * rtableQty * hari,
+                note: `${rtableQty} meja bundar zona VIP/VVIP`
+            });
+        }
+        // mixed_ushape_plus: base U-shape covers it, no extra cost needed
+    }
+
     sections.push({ label: '🪑 Furniture & Tata Ruang', items: furn });
 
     const decor = [];
@@ -245,7 +304,7 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     if (team.includes('notulen')) sdm.push({ ...row('notulen_honor', kota, 1 * hari, overrides, 'orang/kegiatan'), note: '1 notulen' });
     if (team.includes('keamanan')) sdm.push(row('keamanan_honor', kota, 3 * hari, overrides, 'orang/hari', '3 petugas keamanan'));
 
-    // Filter out any nulls incase logic triggered push of a 0 qty or undefined 
+    // Filter out any nulls
     sections.push({ label: '👤 SDM & Honorarium', items: sdm.filter(Boolean) });
 
     const konsumsi = [];
@@ -325,12 +384,13 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     return {
         sections, formasi, luasMin: Math.round(luasMin), luasIdeal: Math.round(luasIdeal),
         proyektorJml, micNS, micPes, hari, totalHadir,
-        peserta: totalPeserta, panitia, narasumber, duration
+        peserta: totalPeserta, panitia, narasumber, duration,
+        mixedSeating: isMixed ? mixedSeating : null,
     };
 }
 
-export function buildChecklist(input, formasi) {
-    const { eventType: evType, team = [], vvip = 0, vip = 0, guestClass = 'reguler', duration = 8 } = input;
+export function buildChecklist(input) {
+    const { eventType: evType, team = [], vvip = 0, guestClass = 'reguler', duration = 8 } = input;
     const hasVVIP = vvip > 0 || guestClass === 'vvip';
     const hari = duration <= 4 ? 1 : Math.ceil(duration / 8);
 

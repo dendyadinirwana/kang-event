@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, forwardRef, startTransition } from 'react';
 import { buildGuideSections } from '../utils/guideData';
 
 export default function GuidePage({ initialOpenSection, onSectionOpened, inputData, result }) {
@@ -11,7 +11,9 @@ export default function GuidePage({ initialOpenSection, onSectionOpened, inputDa
     // Auto-open and scroll to a section when navigated from checklist
     useEffect(() => {
         if (initialOpenSection) {
-            setOpenSections(prev => ({ ...prev, [initialOpenSection]: true }));
+            startTransition(() => {
+                setOpenSections(prev => ({ ...prev, [initialOpenSection]: true }));
+            });
             onSectionOpened?.();
             // Scroll to section after render
             setTimeout(() => {
@@ -64,6 +66,8 @@ export default function GuidePage({ initialOpenSection, onSectionOpened, inputDa
                         placeholder="Cari panduan... (misal: backdrop, catering, VVIP)"
                         value={searchQuery}
                         onChange={(e) => setSearchQuery(e.target.value)}
+                        autoComplete="off"
+                        spellCheck={false}
                     />
                 </div>
                 <div className="guide-toolbar-actions">
@@ -102,15 +106,24 @@ export default function GuidePage({ initialOpenSection, onSectionOpened, inputDa
     );
 }
 
-import { forwardRef } from 'react';
-
 const GuideSection = forwardRef(function GuideSection({ section, isOpen, onToggle }, ref) {
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onToggle();
+        }
+    };
+
     return (
         <div className="guide-section" data-color={section.color} id={`guide-${section.id}`} ref={ref}>
             <div
                 className={`guide-section-header ${isOpen ? 'open' : ''}`}
                 onClick={onToggle}
+                onKeyDown={handleKeyDown}
                 style={{ '--accent': section.color }}
+                role="button"
+                aria-expanded={isOpen}
+                tabIndex={0}
             >
                 <div className="guide-section-header-left">
                     <span className="guide-section-icon">{section.icon}</span>
@@ -167,7 +180,17 @@ const GuideSection = forwardRef(function GuideSection({ section, isOpen, onToggl
     );
 });
 
-/** Simple helper: convert **bold** markdown to <strong> */
+/** Escape HTML special characters to prevent XSS before markdown processing */
+function escapeHtml(text) {
+    return String(text)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+}
+
+/** Sanitize then convert **bold** markdown to <strong> */
 function formatMarkdownBold(text) {
-    return text.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+    return escapeHtml(text).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
 }

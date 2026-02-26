@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, startTransition } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
 import logoPrp from '../assets/logo-prp.png';
@@ -15,7 +15,7 @@ export default function AppHeader() {
     const [scrolled, setScrolled] = useState(false);
 
     useEffect(() => {
-        setMenuOpen(false);
+        startTransition(() => setMenuOpen(false));
     }, [location.pathname]);
 
     useEffect(() => {

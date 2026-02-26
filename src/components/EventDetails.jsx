@@ -1,4 +1,13 @@
+const MAX_ROOM_SIZE = 50000;
+
 export default function EventDetails({ data, onChange }) {
+    const handleRoomSizeChange = (value) => {
+        let parsed = parseInt(value, 10);
+        if (isNaN(parsed) || parsed < 0) parsed = 0;
+        if (parsed > MAX_ROOM_SIZE) parsed = MAX_ROOM_SIZE;
+        onChange('roomSize', parsed === 0 ? '' : parsed);
+    };
+
     return (
         <>
             <div className="card">
@@ -33,6 +42,8 @@ export default function EventDetails({ data, onChange }) {
                             placeholder="Misal: Forum Inovasi 2025"
                             value={data.eventName}
                             onChange={(e) => onChange('eventName', e.target.value)}
+                            autoComplete="off"
+                            spellCheck={false}
                         />
                     </div>
                 </div>
@@ -42,12 +53,12 @@ export default function EventDetails({ data, onChange }) {
                         <label>Durasi</label>
                         <select
                             value={data.duration}
-                            onChange={(e) => onChange('duration', e.target.value)}
+                            onChange={(e) => onChange('duration', Number(e.target.value))}
                         >
-                            <option value="2">Kurang dari 2 jam</option>
-                            <option value="4">Half day (2–4 jam)</option>
-                            <option value="8">Full day (5–8 jam)</option>
-                            <option value="16">Multi-day (2 hari)</option>
+                            <option value={2}>Kurang dari 2 jam</option>
+                            <option value={4}>Half day (2–4 jam)</option>
+                            <option value={8}>Full day (5–8 jam)</option>
+                            <option value={16}>Multi-day (2 hari)</option>
                         </select>
                     </div>
                     <div className="field">
@@ -69,9 +80,13 @@ export default function EventDetails({ data, onChange }) {
                         <label>Luas Ruangan (m²) — opsional</label>
                         <input
                             type="number"
+                            inputMode="numeric"
                             placeholder="Misal: 150"
+                            min="0"
+                            max={MAX_ROOM_SIZE}
                             value={data.roomSize}
-                            onChange={(e) => onChange('roomSize', e.target.value)}
+                            onChange={(e) => handleRoomSizeChange(e.target.value)}
+                            autoComplete="off"
                         />
                     </div>
                 </div>

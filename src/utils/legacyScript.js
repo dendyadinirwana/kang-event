@@ -1,11 +1,5 @@
-
-    function toggleDisclaimer() {
-      const body = document.getElementById('disclaimer-body');
-      const arrow = document.getElementById('disc-arrow');
-      const shown = body.style.display !== 'none';
-      body.style.display = shown ? 'none' : 'block';
-      arrow.classList.toggle('open', !shown);
-    }
+/* eslint-disable */
+// Legacy vanilla JS reference — not imported in the React app
 
     // ── STATE
     const C = { peserta: 30, narasumber: 2, moderator: 1, mc: 1, panitia: 5 };

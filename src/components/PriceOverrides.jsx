@@ -1,8 +1,21 @@
 import { useState } from 'react';
 import { OVERRIDE_ITEMS, HARGA } from '../utils/rabCalculator';
 
+const MAX_PRICE = 1_000_000_000; // 1 billion IDR
+
+/** Normalize the city label to the key used in HARGA price tables */
+function normalizeCityKey(kotaLabel) {
+    if (!kotaLabel) return 'daerah';
+    const lower = kotaLabel.toLowerCase().trim();
+    // Handle "Daerah lainnya" or any variant that doesn't exactly match a city key
+    const knownCities = ['jakarta', 'bandung', 'surabaya', 'yogyakarta', 'medan', 'makassar'];
+    if (knownCities.includes(lower)) return lower;
+    return 'daerah';
+}
+
 export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel = 'jakarta' }) {
     const [isOpen, setIsOpen] = useState(false);
+    const cityKey = normalizeCityKey(kotaLabel);
 
     // Group items by section
     const groupedItems = [];
@@ -25,7 +38,14 @@ export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel 
     const getDefaultPrice = (key) => {
         const item = HARGA[key];
         if (!item) return 0;
-        return item.harga[kotaLabel.toLowerCase()] || item.harga.daerah || 0;
+        return item.harga[cityKey] || item.harga.daerah || 0;
+    };
+
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(v => !v);
+        }
     };
 
     return (
@@ -39,6 +59,10 @@ export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel 
                     userSelect: 'none'
                 }}
                 onClick={() => setIsOpen(!isOpen)}
+                onKeyDown={handleKeyDown}
+                role="button"
+                aria-expanded={isOpen}
+                tabIndex={0}
             >
                 <div>
                     <div className="card-title" style={{ marginBottom: '4px' }}>
@@ -53,8 +77,8 @@ export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel 
                 </div>
             </div>
 
-            {isOpen && (
-                <div style={{ marginTop: '20px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+            <div className={`collapsible-body ${isOpen ? 'show' : ''}`}>
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
                     {groupedItems.map((group, idx) => (
                         <div key={idx} style={{ marginBottom: '24px' }}>
                             <h3 style={{ fontSize: '15px', fontWeight: 'bold', marginBottom: '16px', color: 'var(--text-muted)' }}>
@@ -79,12 +103,23 @@ export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel 
                                                 }}>Rp</span>
                                                 <input
                                                     type="number"
+                                                    inputMode="numeric"
                                                     style={{ paddingLeft: '32px' }}
                                                     placeholder={defaultPrice.toLocaleString('id-ID')}
                                                     value={value}
+                                                    min="0"
+                                                    max={MAX_PRICE}
+                                                    autoComplete="off"
                                                     onChange={(e) => {
                                                         const val = e.target.value;
-                                                        onChangeOverride(item.key, val === '' ? undefined : parseInt(val, 10));
+                                                        if (val === '') {
+                                                            onChangeOverride(item.key, undefined);
+                                                        } else {
+                                                            let parsed = parseInt(val, 10);
+                                                            if (isNaN(parsed) || parsed < 0) parsed = 0;
+                                                            if (parsed > MAX_PRICE) parsed = MAX_PRICE;
+                                                            onChangeOverride(item.key, parsed);
+                                                        }
                                                     }}
                                                 />
                                             </div>
@@ -114,7 +149,7 @@ export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel 
                         </p>
                     </div>
                 </div>
-            )}
+            </div>
         </div>
     );
 }

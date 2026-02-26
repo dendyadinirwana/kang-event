@@ -2,16 +2,26 @@ import { useState } from 'react';
 
 const rp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
-export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToGuide, onNavigateToChecklist }) {
+export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToChecklist, onReset }) {
+    const [copySuccess, setCopySuccess] = useState(false);
+
     if (!result) return null;
 
-    const { sections, formasi, luasMin, luasIdeal, proyektorJml, micNS, micPes, hari, totalHadir } = result;
+    const { sections, formasi, luasMin, luasIdeal, proyektorJml, micNS, micPes, hari, totalHadir, mixedSeating } = result;
     const formasiLabel = {
         theater: 'Theater / Bioskop',
         classroom: 'Classroom / Kelas',
         roundtable: 'Round Table / FGD',
         'u-shape': 'U-Shape',
         banquet: 'Banquet / Meja Bundar'
+    };
+
+    const mixedSeatingLabel = {
+        mixed_roundtable: 'Round Table Mix (VVIP/VIP terpisah)',
+        mixed_sofa_lounge: 'Sofa Lounge + Kursi (VIP di terdepan)',
+        mixed_banquet: 'Banquet Mix (Head Table VIP/VVIP)',
+        mixed_cabaret: 'Cabaret Mix (Cluster, VIP di depan)',
+        mixed_ushape_plus: 'U-Shape + Pax (VIP di dalam U)',
     };
 
     const grandTotal = sections.reduce((acc, sec) => acc + sec.items.reduce((a, b) => a + b.total, 0), 0);
@@ -33,7 +43,12 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
         txt += 'GRAND TOTAL\t\t\t\t' + rp(grandTotal) + '\n';
         txt += `Belum termasuk PPN 11% (${rp(ppn)}) • Total+PPN: ${rp(grandTotal + ppn)}\n`;
         txt += `Referensi: PMK 32/2025 tentang SBM TA 2026\n`;
-        navigator.clipboard.writeText(txt).then(() => alert('RAB berhasil di-copy! ✅')).catch(err => console.error(err));
+        navigator.clipboard.writeText(txt)
+            .then(() => {
+                setCopySuccess(true);
+                setTimeout(() => setCopySuccess(false), 2500);
+            })
+            .catch(err => console.error(err));
     };
 
     return (
@@ -60,6 +75,9 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
                 <div className="layout-info-title">📋 Parameter Setup Ruangan &amp; Harga</div>
                 <div className="layout-info-grid">
                     <div className="linfo-item"><span>Formasi Duduk:</span><strong>{formasiLabel[formasi] || formasi}</strong></div>
+                    {mixedSeating && (
+                        <div className="linfo-item"><span>Formasi Campuran:</span><strong>{mixedSeatingLabel[mixedSeating] || mixedSeating}</strong></div>
+                    )}
                     <div className="linfo-item"><span>Luas Minimal:</span><strong>{luasMin} m²</strong></div>
                     <div className="linfo-item"><span>Luas Ideal:</span><strong>{luasIdeal} m²</strong></div>
                     <div className="linfo-item"><span>Proyektor:</span><strong>{proyektorJml} unit</strong></div>
@@ -90,6 +108,9 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
             {onNavigateToChecklist && (
                 <div
                     onClick={onNavigateToChecklist}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onNavigateToChecklist(); } }}
                     style={{
                         marginTop: '24px', padding: '16px 20px',
                         background: 'linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%)',
@@ -113,11 +134,18 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
                 </div>
             )}
 
+            {/* Copy success toast */}
+            {copySuccess && (
+                <div className="copy-toast" role="status" aria-live="polite">
+                    ✅ RAB berhasil di-copy ke clipboard!
+                </div>
+            )}
+
             <div className="claude-btn-container">
                 <button className="claude-btn claude-btn-secondary" onClick={copyRAB}>
                     <span style={{ fontSize: '16px' }}>📋</span> Copy Tabel RAB
                 </button>
-                <button className="claude-btn claude-btn-secondary" onClick={() => window.location.reload()}>
+                <button className="claude-btn claude-btn-secondary" onClick={onReset}>
                     <span style={{ fontSize: '16px' }}>🔄</span> Reset Data
                 </button>
                 <button className="claude-btn claude-btn-primary" onClick={() => window.print()}>
@@ -132,9 +160,23 @@ function RABSection({ section }) {
     const [open, setOpen] = useState(true);
     const secTotal = section.items.reduce((a, b) => a + b.total, 0);
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(v => !v);
+        }
+    };
+
     return (
         <div className="rab-wrap">
-            <div className={`rab-section-hdr ${open ? 'open' : ''}`} onClick={() => setOpen(!open)}>
+            <div
+                className={`rab-section-hdr ${open ? 'open' : ''}`}
+                onClick={() => setOpen(!open)}
+                onKeyDown={handleKeyDown}
+                role="button"
+                aria-expanded={open}
+                tabIndex={0}
+            >
                 <div className="rab-section-title">{section.label}</div>
                 <div className="rab-section-total">{rp(secTotal)}</div>
                 <div className="rab-section-arrow">▼</div>

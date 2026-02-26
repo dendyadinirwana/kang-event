@@ -30,9 +30,8 @@ const MIXED_SEATING_OPTIONS = [
     },
 ];
 
-export default function Decorations({ data, onChangeData, selectedDecor, onChangeDecor, guestClass }) {
+export default function Decorations({ data, onChangeData, selectedDecor, onChangeDecor, guestClass, mixedSeating, onChangeMixedSeating }) {
     const [isOpen, setIsOpen] = useState(true);
-    const [mixedSeating, setMixedSeating] = useState('mixed_roundtable');
     const isMixed = guestClass === 'campuran';
 
     const options = [
@@ -57,12 +56,24 @@ export default function Decorations({ data, onChangeData, selectedDecor, onChang
     ];
 
     const activeCount = selectedDecor.length;
+    const currentMixed = mixedSeating || 'mixed_roundtable';
+
+    const handleToggleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(v => !v);
+        }
+    };
 
     return (
         <div className="card">
             <div
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => setIsOpen(!isOpen)}
+                onKeyDown={handleToggleKeyDown}
+                role="button"
+                aria-expanded={isOpen}
+                tabIndex={0}
             >
                 <div>
                     <div className="card-title" style={{ marginBottom: '4px' }}>
@@ -78,8 +89,8 @@ export default function Decorations({ data, onChangeData, selectedDecor, onChang
                 <div style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}>▼</div>
             </div>
 
-            {isOpen && (
-                <div style={{ marginTop: '16px', borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+            <div className={`collapsible-body ${isOpen ? 'show' : ''}`}>
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
                     {/* Standard seating and style */}
                     <div className="grid-2" style={{ marginBottom: '12px' }}>
                         <div className="field">
@@ -120,14 +131,14 @@ export default function Decorations({ data, onChangeData, selectedDecor, onChang
                                 {MIXED_SEATING_OPTIONS.map((opt) => (
                                     <label
                                         key={opt.value}
-                                        className={`mixed-seating-card ${mixedSeating === opt.value ? 'selected' : ''}`}
+                                        className={`mixed-seating-card ${currentMixed === opt.value ? 'selected' : ''}`}
                                     >
                                         <input
                                             type="radio"
                                             name="mixedSeating"
                                             value={opt.value}
-                                            checked={mixedSeating === opt.value}
-                                            onChange={() => setMixedSeating(opt.value)}
+                                            checked={currentMixed === opt.value}
+                                            onChange={() => onChangeMixedSeating(opt.value)}
                                             style={{ display: 'none' }}
                                         />
                                         <div className="mixed-seating-card-label">{opt.label}</div>
@@ -140,7 +151,7 @@ export default function Decorations({ data, onChangeData, selectedDecor, onChang
 
                     <ToggleChips options={options} selectedValues={selectedDecor} onChange={onChangeDecor} />
                 </div>
-            )}
+            </div>
         </div>
     );
 }

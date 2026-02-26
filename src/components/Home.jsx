@@ -13,20 +13,20 @@ import PriceOverrides from './PriceOverrides';
 import GuidePage from './GuidePage';
 import { buildRAB, buildChecklist } from '../utils/rabCalculator';
 
-export default function Home() {
-    const [eventData, setEventData] = useState({
-        eventType: 'seminar',
-        eventName: '',
-        duration: 8,
-        location: 'jakarta',
-        roomSize: '',
-        decorStyle: 'formal',
-        seatingPref: 'auto',
-    });
+const INITIAL_EVENT_DATA = {
+    eventType: 'seminar',
+    eventName: '',
+    duration: 8,
+    location: 'jakarta',
+    roomSize: '',
+    decorStyle: 'formal',
+    seatingPref: 'auto',
+};
 
+export default function Home() {
+    const [eventData, setEventData] = useState(INITIAL_EVENT_DATA);
     const [guestClass, setGuestClass] = useState('reguler');
     const [guestCounts, setGuestCounts] = useState({ vvip: 0, vip: 0 });
-
     const [teamCounts, setTeamCounts] = useState({
         peserta: 30,
         narasumber: 2,
@@ -34,9 +34,9 @@ export default function Home() {
         mc: 1,
         panitia: 5
     });
-
     const [supportTeam, setSupportTeam] = useState(['asrot', 'registrasi', 'konsumsi']);
     const [decorations, setDecorations] = useState(['standing_flower', 'backdrop_foto']);
+    const [mixedSeating, setMixedSeating] = useState('mixed_roundtable');
 
     const [result, setResult] = useState(null);
     const [checklist, setChecklist] = useState([]);
@@ -78,6 +78,23 @@ export default function Home() {
         });
     };
 
+    const handleReset = () => {
+        setEventData(INITIAL_EVENT_DATA);
+        setGuestClass('reguler');
+        setGuestCounts({ vvip: 0, vip: 0 });
+        setTeamCounts({ peserta: 30, narasumber: 2, moderator: 1, mc: 1, panitia: 5 });
+        setSupportTeam(['asrot', 'registrasi', 'konsumsi']);
+        setDecorations(['standing_flower', 'backdrop_foto']);
+        setMixedSeating('mixed_roundtable');
+        setResult(null);
+        setChecklist([]);
+        setOverrides({});
+        setSeminarKitData({ reguler: null, vip: null, vvip: null });
+        setLastInputData(null);
+        setActiveTab('simulasi');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    };
+
     const generateRAB = () => {
         if (!eventData.eventType) {
             setError('Pilih jenis acara dulu ya!');
@@ -103,7 +120,8 @@ export default function Home() {
             vip: guestCounts.vip,
             ...teamCounts,
             team: supportTeam,
-            decorChips: decorations
+            decorChips: decorations,
+            mixedSeating,
         };
 
         const calculatedResult = buildRAB(inputData, overrides, seminarKitData);
@@ -149,6 +167,7 @@ export default function Home() {
                     inputData={lastInputData}
                     eventName={finalEventName}
                     kotaLabel={kotaLabel}
+                    onSwitchToSimulasi={() => setActiveTab('simulasi')}
                 />
             ) : (
                 <>
@@ -180,6 +199,8 @@ export default function Home() {
                         selectedDecor={decorations}
                         onChangeDecor={setDecorations}
                         guestClass={guestClass}
+                        mixedSeating={mixedSeating}
+                        onChangeMixedSeating={setMixedSeating}
                     />
 
                     <SeminarKit
@@ -200,13 +221,21 @@ export default function Home() {
 
                     <Disclaimer />
 
+                    {/* Error toast — full-width above the button */}
+                    {errorMsg && (
+                        <div className="error-toast" style={{ marginBottom: '12px' }}>
+                            ⚠️ {errorMsg}
+                            <button
+                                onClick={() => setErrorMsg(null)}
+                                style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: '16px' }}
+                                aria-label="Tutup pesan error"
+                            >
+                                ×
+                            </button>
+                        </div>
+                    )}
+
                     <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-                        {errorMsg && (
-                            <div className="error-toast" style={{ marginBottom: '10px', width: '100%' }}>
-                                ⚠️ {errorMsg}
-                                <button onClick={() => setErrorMsg(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: '16px' }}>×</button>
-                            </div>
-                        )}
                         <button className="claude-btn claude-btn-primary" onClick={generateRAB} style={{ padding: '14px 24px', fontSize: '15px' }}>
                             <span style={{ fontSize: '18px' }}>✨</span> Simulasikan Kegiatan
                         </button>
@@ -231,6 +260,7 @@ export default function Home() {
                                     setActiveTab('checklist');
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
+                                onReset={handleReset}
                             />
                         )}
                     </div>

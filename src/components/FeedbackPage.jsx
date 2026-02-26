@@ -1,12 +1,28 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 
-const WEB3FORMS_KEY = '480a8ae5-b180-4fa9-8f8c-309d9953e082';
+const STATUS = { idle: 'idle', loading: 'loading', success: 'success', error: 'error', cooldown: 'cooldown' };
 
-const STATUS = { idle: 'idle', loading: 'loading', success: 'success', error: 'error' };
+const COOLDOWN_SECONDS = 60;
 
 export default function FeedbackPage() {
     const [status, setStatus] = useState(STATUS.idle);
     const [formData, setFormData] = useState({ name: '', subject: '', message: '' });
+    const [cooldownLeft, setCooldownLeft] = useState(0);
+    const cooldownTimer = useRef(null);
+
+    const startCooldown = () => {
+        setCooldownLeft(COOLDOWN_SECONDS);
+        setStatus(STATUS.cooldown);
+        let remaining = COOLDOWN_SECONDS;
+        cooldownTimer.current = setInterval(() => {
+            remaining -= 1;
+            setCooldownLeft(remaining);
+            if (remaining <= 0) {
+                clearInterval(cooldownTimer.current);
+                setStatus(STATUS.idle);
+            }
+        }, 1000);
+    };
 
     const handleChange = (e) => {
         setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
@@ -14,14 +30,22 @@ export default function FeedbackPage() {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        if (status === STATUS.loading || status === STATUS.cooldown) return;
         setStatus(STATUS.loading);
+
+        const apiKey = import.meta.env.VITE_WEB3FORMS_KEY;
+        if (!apiKey) {
+            console.error('Web3Forms key not configured. Set VITE_WEB3FORMS_KEY in .env');
+            setStatus(STATUS.error);
+            return;
+        }
 
         try {
             const resp = await fetch('https://api.web3forms.com/submit', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Accept: 'application/json' },
                 body: JSON.stringify({
-                    access_key: WEB3FORMS_KEY,
+                    access_key: apiKey,
                     subject: formData.subject || 'Feedback – Aplikasi Simulasi Kegiatan',
                     from_name: formData.name || 'Pengguna Aplikasi',
                     message: formData.message,
@@ -40,6 +64,11 @@ export default function FeedbackPage() {
             console.error(err);
             setStatus(STATUS.error);
         }
+    };
+
+    const handleSendAgain = () => {
+        setStatus(STATUS.idle);
+        startCooldown();
     };
 
     return (
@@ -69,7 +98,7 @@ export default function FeedbackPage() {
                             <p>Terima kasih atas masukanmu. Kami akan meninjau dan merespons sesegera mungkin.</p>
                             <button
                                 className="claude-btn claude-btn-secondary"
-                                onClick={() => setStatus(STATUS.idle)}
+                                onClick={handleSendAgain}
                                 style={{ marginTop: '12px' }}
                             >
                                 Kirim Lagi
@@ -86,6 +115,8 @@ export default function FeedbackPage() {
                                     placeholder="Misal: Budi Santoso"
                                     value={formData.name}
                                     onChange={handleChange}
+                                    autoComplete="off"
+                                    spellCheck={false}
                                 />
                             </div>
 
@@ -99,6 +130,8 @@ export default function FeedbackPage() {
                                     required
                                     value={formData.subject}
                                     onChange={handleChange}
+                                    autoComplete="off"
+                                    spellCheck={false}
                                 />
                             </div>
 
@@ -112,6 +145,7 @@ export default function FeedbackPage() {
                                     style={{ minHeight: '140px' }}
                                     value={formData.message}
                                     onChange={handleChange}
+                                    autoComplete="off"
                                 />
                             </div>
 
@@ -121,13 +155,21 @@ export default function FeedbackPage() {
                                 </div>
                             )}
 
+                            {status === STATUS.cooldown && (
+                                <div className="feedback-error-msg" style={{ background: 'var(--accent-bg)', borderColor: 'var(--accent)', color: 'var(--accent)' }}>
+                                    ⏳ Harap tunggu {cooldownLeft} detik sebelum mengirim pesan berikutnya.
+                                </div>
+                            )}
+
                             <button
                                 type="submit"
                                 className="claude-btn claude-btn-primary feedback-submit-btn"
-                                disabled={status === STATUS.loading}
+                                disabled={status === STATUS.loading || status === STATUS.cooldown}
                             >
                                 {status === STATUS.loading ? (
                                     <><span className="feedback-spinner" /> Mengirim...</>
+                                ) : status === STATUS.cooldown ? (
+                                    <>⏳ Tunggu {cooldownLeft}s...</>
                                 ) : (
                                     <><span>✉️</span> Kirim Pesan</>
                                 )}

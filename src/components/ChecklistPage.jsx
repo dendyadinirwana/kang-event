@@ -1,20 +1,6 @@
 import { useState } from 'react';
 
-const fmt = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
-
-export default function ChecklistPage({ checklist, inputData, eventName, kotaLabel }) {
-    if (!checklist || checklist.length === 0) {
-        return (
-            <div style={{ textAlign: 'center', padding: '60px 20px' }}>
-                <div style={{ fontSize: '48px', marginBottom: '16px' }}>📋</div>
-                <h2 style={{ fontSize: '18px', color: 'var(--text-muted)', marginBottom: '8px' }}>Belum ada checklist</h2>
-                <p style={{ fontSize: '14px', color: 'var(--text-dim)' }}>
-                    Jalankan simulasi kegiatan terlebih dahulu untuk menghasilkan checklist persiapan otomatis.
-                </p>
-            </div>
-        );
-    }
-
+export default function ChecklistPage({ checklist, inputData, eventName, kotaLabel, onSwitchToSimulasi }) {
     const [doneState, setDoneState] = useState({});
     const [picState, setPicState] = useState({});
 
@@ -27,9 +13,30 @@ export default function ChecklistPage({ checklist, inputData, eventName, kotaLab
         setPicState(prev => ({ ...prev, [k]: val }));
     };
 
-    const totalItems = checklist.reduce((s, g) => s + g.items.length, 0);
+    const totalItems = (checklist || []).reduce((s, g) => s + g.items.length, 0);
     const doneCount = Object.values(doneState).filter(Boolean).length;
     const progress = totalItems > 0 ? Math.round((doneCount / totalItems) * 100) : 0;
+
+    if (!checklist || checklist.length === 0) {
+        return (
+            <div style={{ textAlign: 'center', padding: '60px 20px' }}>
+                <div style={{ fontSize: '48px', marginBottom: '16px' }}>📋</div>
+                <h2 style={{ fontSize: '18px', color: 'var(--text-muted)', marginBottom: '8px' }}>Belum ada checklist</h2>
+                <p style={{ fontSize: '14px', color: 'var(--text-dim)', marginBottom: '24px' }}>
+                    Jalankan simulasi kegiatan terlebih dahulu untuk menghasilkan checklist persiapan otomatis.
+                </p>
+                {onSwitchToSimulasi && (
+                    <button
+                        className="claude-btn claude-btn-primary"
+                        onClick={onSwitchToSimulasi}
+                        style={{ margin: '0 auto' }}
+                    >
+                        <span>✨</span> Mulai Simulasi
+                    </button>
+                )}
+            </div>
+        );
+    }
 
     return (
         <div id="checklist-page">
@@ -69,7 +76,14 @@ export default function ChecklistPage({ checklist, inputData, eventName, kotaLab
                         {doneCount}/{totalItems} selesai ({progress}%)
                     </span>
                 </div>
-                <div style={{ height: '8px', background: 'var(--surface2)', borderRadius: '4px', overflow: 'hidden' }}>
+                <div
+                    style={{ height: '8px', background: 'var(--surface2)', borderRadius: '4px', overflow: 'hidden' }}
+                    role="progressbar"
+                    aria-valuenow={progress}
+                    aria-valuemin={0}
+                    aria-valuemax={100}
+                    aria-label="Progress persiapan kegiatan"
+                >
                     <div style={{
                         height: '100%',
                         width: `${progress}%`,
@@ -123,12 +137,23 @@ function ChecklistGroup({ group, gIdx, doneState, picState, onToggle, onPIC }) {
     const total = group.items.length;
     const done = group.items.filter((_, iIdx) => doneState[`${gIdx}-${iIdx}`]).length;
 
+    const handleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setOpen(v => !v);
+        }
+    };
+
     return (
         <div className="cl-group" style={{ marginBottom: '12px' }}>
             <div
                 className="cl-cat"
                 style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', cursor: 'pointer' }}
                 onClick={() => setOpen(!open)}
+                onKeyDown={handleKeyDown}
+                role="button"
+                aria-expanded={open}
+                tabIndex={0}
             >
                 <span>{group.cat}</span>
                 <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
@@ -152,6 +177,10 @@ function ChecklistGroup({ group, gIdx, doneState, picState, onToggle, onPIC }) {
                         className={`cl-item ${isDone ? 'done' : ''}`}
                         style={{ cursor: 'pointer' }}
                         onClick={() => onToggle(gIdx, iIdx)}
+                        role="checkbox"
+                        aria-checked={isDone}
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onToggle(gIdx, iIdx); } }}
                     >
                         <div className="cl-check" />
                         <div style={{ flex: 1 }}>
@@ -175,6 +204,7 @@ function ChecklistGroup({ group, gIdx, doneState, picState, onToggle, onPIC }) {
                                 placeholder="Nama PIC..."
                                 value={picState[key] || ''}
                                 onChange={e => onPIC(gIdx, iIdx, e.target.value)}
+                                autoComplete="off"
                                 style={{
                                     border: 'none', background: 'transparent',
                                     borderBottom: '1px dashed var(--border)', outline: 'none',

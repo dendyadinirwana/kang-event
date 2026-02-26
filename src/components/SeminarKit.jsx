@@ -36,7 +36,7 @@ function ClassKitEditor({ cls, kitData, onChange, defaultQty, priceFor }) {
 
     const addCustom = () => {
         if (!customName.trim()) return;
-        const newItem = { id: Date.now(), name: customName.trim(), harga: parseInt(customPrice) || 0 };
+        const newItem = { id: Date.now(), name: customName.trim(), harga: parseInt(customPrice, 10) || 0 };
         update({ customItems: [...customItems, newItem] });
         setCustomName(''); setCustomPrice(''); setShowCustomForm(false);
     };
@@ -54,14 +54,32 @@ function ClassKitEditor({ cls, kitData, onChange, defaultQty, priceFor }) {
                     {meta.emoji} {meta.label}
                 </span>
                 <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Jumlah:</span>
-                <button className="qty-btn" onClick={() => update({ qty: Math.max(0, qty - 1) })}>−</button>
+                <button
+                    className="qty-btn"
+                    onClick={() => update({ qty: Math.max(0, qty - 1) })}
+                    disabled={qty <= 0}
+                    aria-label={`Kurangi qty ${meta.label}`}
+                >−</button>
                 <input
                     type="number"
+                    inputMode="numeric"
                     className="qty-input"
                     value={qty}
-                    onChange={e => update({ qty: Math.max(0, parseInt(e.target.value) || 0) })}
+                    min="0"
+                    max="5000"
+                    autoComplete="off"
+                    onChange={e => {
+                        let v = parseInt(e.target.value, 10);
+                        if (isNaN(v) || v < 0) v = 0;
+                        if (v > 5000) v = 5000;
+                        update({ qty: v });
+                    }}
                 />
-                <button className="qty-btn" onClick={() => update({ qty: qty + 1 })}>+</button>
+                <button
+                    className="qty-btn"
+                    onClick={() => update({ qty: qty + 1 })}
+                    aria-label={`Tambah qty ${meta.label}`}
+                >+</button>
                 {subtotal > 0 && (
                     <span style={{ marginLeft: 'auto', fontSize: '12px', fontWeight: 700, color: 'var(--accent)' }}>
                         {fmt(subtotal)}
@@ -78,6 +96,7 @@ function ClassKitEditor({ cls, kitData, onChange, defaultQty, priceFor }) {
                         <button
                             key={key}
                             onClick={() => toggleItem(key)}
+                            aria-pressed={selected}
                             style={{
                                 padding: '5px 10px',
                                 borderRadius: '20px',
@@ -105,7 +124,11 @@ function ClassKitEditor({ cls, kitData, onChange, defaultQty, priceFor }) {
                 <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', padding: '5px 10px', background: 'var(--surface2)', borderRadius: '8px', border: '1px dashed var(--border2)' }}>
                     <span style={{ flex: 1, fontSize: '12px', color: 'var(--text)' }}>✏️ {c.name}</span>
                     <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{fmt(c.harga)}/pax</span>
-                    <button onClick={() => removeCustom(c.id)} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '14px' }}>×</button>
+                    <button
+                        onClick={() => removeCustom(c.id)}
+                        style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '14px' }}
+                        aria-label={`Hapus item ${c.name}`}
+                    >×</button>
                 </div>
             ))}
 
@@ -117,17 +140,21 @@ function ClassKitEditor({ cls, kitData, onChange, defaultQty, priceFor }) {
                         placeholder="Nama item..."
                         value={customName}
                         onChange={e => setCustomName(e.target.value)}
+                        autoComplete="off"
+                        spellCheck={false}
                         style={{ flex: 1, padding: '5px 10px', borderRadius: '6px', border: '1px solid var(--border2)', background: 'var(--surface)', color: 'var(--text)', fontSize: '12px' }}
                     />
                     <input
                         type="number"
+                        inputMode="numeric"
                         placeholder="Harga/pax"
                         value={customPrice}
                         onChange={e => setCustomPrice(e.target.value)}
+                        autoComplete="off"
                         style={{ width: '100px', padding: '5px 8px', borderRadius: '6px', border: '1px solid var(--border2)', background: 'var(--surface)', color: 'var(--text)', fontSize: '12px' }}
                     />
                     <button onClick={addCustom} style={{ padding: '5px 10px', borderRadius: '6px', background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>Tambah</button>
-                    <button onClick={() => setShowCustomForm(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '16px' }}>×</button>
+                    <button onClick={() => setShowCustomForm(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '16px' }} aria-label="Tutup form custom item">×</button>
                 </div>
             ) : (
                 <button
@@ -169,11 +196,22 @@ export default function SeminarKit({ seminarKitData, onChange, peserta = 30, vip
         return sum + cat + cust;
     }, 0);
 
+    const handleToggleKeyDown = (e) => {
+        if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            setIsOpen(v => !v);
+        }
+    };
+
     return (
         <div className="card" style={{ marginBottom: '16px' }}>
             <div
                 style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}
                 onClick={() => setIsOpen(!isOpen)}
+                onKeyDown={handleToggleKeyDown}
+                role="button"
+                aria-expanded={isOpen}
+                tabIndex={0}
             >
                 <div>
                     <div className="card-title" style={{ marginBottom: '4px' }}>
@@ -189,8 +227,8 @@ export default function SeminarKit({ seminarKitData, onChange, peserta = 30, vip
                 <div style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}>▼</div>
             </div>
 
-            {isOpen && (
-                <div style={{ marginTop: '20px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
+            <div className={`collapsible-body ${isOpen ? 'show' : ''}`}>
+                <div style={{ borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
                     {classes.map((cls, i) => (
                         <div key={cls}>
                             {i > 0 && <div style={{ borderTop: '1px solid var(--border)', marginBottom: '16px', marginTop: '4px' }} />}
@@ -211,7 +249,7 @@ export default function SeminarKit({ seminarKitData, onChange, peserta = 30, vip
                         </div>
                     )}
                 </div>
-            )}
+            </div>
         </div>
     );
 }

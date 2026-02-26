@@ -3,6 +3,8 @@ import AppHeader from './components/AppHeader';
 import Home from './components/Home';
 import FeedbackPage from './components/FeedbackPage';
 import AboutPage from './components/AboutPage';
+import Footer from './components/Footer';
+import BackToTop from './components/BackToTop';
 
 export default function App() {
   return (
@@ -10,8 +12,24 @@ export default function App() {
       <AppHeader />
       <Routes>
         <Route path="/" element={<Home />} />
-        <Route path="/feedback" element={<FeedbackPage />} />
-        <Route path="/about" element={<AboutPage />} />
+        <Route path="/feedback" element={
+          <>
+            <div className="wrapper">
+              <FeedbackPage />
+            </div>
+            <Footer />
+            <BackToTop />
+          </>
+        } />
+        <Route path="/about" element={
+          <>
+            <div className="wrapper">
+              <AboutPage />
+            </div>
+            <Footer />
+            <BackToTop />
+          </>
+        } />
       </Routes>
     </div>
   );

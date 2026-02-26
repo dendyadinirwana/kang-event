@@ -54,7 +54,7 @@ export default function AboutPage() {
                     <div className="about-dev-avatar">🏛️</div>
                     <div className="about-dev-info">
                         <div className="about-dev-name">Direktorat PRP-PPDT</div>
-                        <div className="about-dev-role">Direktorat Pengembangan dan Pemulihan Desa Tertinggal</div>
+                        <div className="about-dev-role">Direktorat Penyerasian Rencana dan Program Percepatan Pembangunan Daerah Tertinggal</div>
                         <div className="about-dev-meta">
                             <span className="about-dev-badge">v2.0.0 · Dynamic Engine</span>
                             <span className="about-dev-badge">PMK 32/2025 · SBM TA 2026</span>

@@ -3,7 +3,9 @@
  * Berisi panduan langkah-demi-langkah untuk persiapan acara/kegiatan.
  */
 
-export function buildGuideSections(input = {}, computed = {}) {
+export function buildGuideSections(inputParams, computedParams) {
+    const input = inputParams || {};
+    const computed = computedParams || {};
     // Determine dynamic flags based on input
     const isWebinar = input.eventType === 'webinar';
     const hasStreaming = (input.team || []).includes('live_streaming');

@@ -33,6 +33,21 @@ export default function ChecklistPage({ checklist, inputData, eventName, kotaLab
 
     return (
         <div id="checklist-page">
+            {/* Info input context */}
+            {inputData && (
+                <div className="layout-info no-print" style={{ marginBottom: '20px' }}>
+                    <div className="layout-info-title">📋 Detail Kegiatan</div>
+                    <div className="layout-info-grid">
+                        <div className="linfo-item"><span>Jenis Acara:</span><strong>{inputData.eventType}</strong></div>
+                        <div className="linfo-item"><span>Lokasi:</span><strong>{kotaLabel}</strong></div>
+                        <div className="linfo-item"><span>Peserta:</span><strong>{inputData.peserta} orang</strong></div>
+                        <div className="linfo-item"><span>Panitia:</span><strong>{inputData.panitia} orang</strong></div>
+                        <div className="linfo-item"><span>Narasumber:</span><strong>{inputData.narasumber} orang</strong></div>
+                        <div className="linfo-item"><span>Durasi:</span><strong>{inputData.duration} jam</strong></div>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div className="result-hdr" style={{ marginBottom: '20px' }}>
                 <div className="result-title">{eventName || 'Checklist Persiapan'}</div>
@@ -99,20 +114,6 @@ export default function ChecklistPage({ checklist, inputData, eventName, kotaLab
                 </button>
             </div>
 
-            {/* Info input context */}
-            {inputData && (
-                <div className="layout-info no-print" style={{ marginTop: '20px' }}>
-                    <div className="layout-info-title">📋 Detail Kegiatan</div>
-                    <div className="layout-info-grid">
-                        <div className="linfo-item"><span>Jenis Acara:</span><strong>{inputData.eventType}</strong></div>
-                        <div className="linfo-item"><span>Lokasi:</span><strong>{kotaLabel}</strong></div>
-                        <div className="linfo-item"><span>Peserta:</span><strong>{inputData.peserta} orang</strong></div>
-                        <div className="linfo-item"><span>Panitia:</span><strong>{inputData.panitia} orang</strong></div>
-                        <div className="linfo-item"><span>Narasumber:</span><strong>{inputData.narasumber} orang</strong></div>
-                        <div className="linfo-item"><span>Durasi:</span><strong>{inputData.duration} jam</strong></div>
-                    </div>
-                </div>
-            )}
         </div>
     );
 }

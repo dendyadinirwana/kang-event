@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
-import { GUIDE_SECTIONS } from '../utils/guideData';
+import { buildGuideSections } from '../utils/guideData';
 
-export default function GuidePage({ initialOpenSection, onSectionOpened }) {
+export default function GuidePage({ initialOpenSection, onSectionOpened, inputData, result }) {
     const [openSections, setOpenSections] = useState({});
     const [searchQuery, setSearchQuery] = useState('');
     const sectionRefs = useRef({});
+
+    const guideSections = buildGuideSections(inputData, result);
 
     // Auto-open and scroll to a section when navigated from checklist
     useEffect(() => {
@@ -25,23 +27,23 @@ export default function GuidePage({ initialOpenSection, onSectionOpened }) {
 
     const expandAll = () => {
         const all = {};
-        GUIDE_SECTIONS.forEach(s => { all[s.id] = true; });
+        guideSections.forEach(s => { all[s.id] = true; });
         setOpenSections(all);
     };
 
     const collapseAll = () => setOpenSections({});
 
     const filteredSections = searchQuery.trim()
-        ? GUIDE_SECTIONS.filter(sec => {
+        ? guideSections.filter(sec => {
             const q = searchQuery.toLowerCase();
             if (sec.title.toLowerCase().includes(q)) return true;
             if (sec.subtitle.toLowerCase().includes(q)) return true;
             return sec.steps.some(step =>
                 step.title.toLowerCase().includes(q) ||
-                step.items.some(item => item.toLowerCase().includes(q))
+                step.items.some(item => typeof item === 'string' ? item.toLowerCase().includes(q) : false)
             );
         })
-        : GUIDE_SECTIONS;
+        : guideSections;
 
     return (
         <div className="guide-page">

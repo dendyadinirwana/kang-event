@@ -83,11 +83,18 @@
       font-feature-settings: 'kern' 1, 'liga' 1;
     }
 
+    .app-container {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
     .wrapper {
       width: 100%;
       max-width: 680px;
       margin: 0 auto;
       padding: 36px 20px 60px;
+      flex: 1;
     }
 
     /* HEADER */
@@ -1268,7 +1275,7 @@
     .site-footer {
       background: var(--surface);
       border-top: 1px solid var(--border);
-      margin-top: 48px;
+      margin-top: auto;
       padding: 32px 22px;
     }
 
@@ -1599,9 +1606,61 @@
 
     .header-tab.active {
       background: var(--surface);
-      color: var(--text);
-      font-weight: 600;
-      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+      border-color: var(--accent);
+      color: var(--accent);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+    }
+
+    /* BACK TO TOP */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 46px;
+      height: 46px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all .3s cubic-bezier(.4, 0, .2, 1);
+      box-shadow: 0 4px 15px rgba(201, 100, 66, .35);
+      z-index: 1000;
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    .back-to-top.show {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .back-to-top:hover {
+      background: var(--accent);
+      filter: brightness(0.9);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(201, 100, 66, .45);
+    }
+
+    .back-to-top:active {
+      transform: translateY(-1px);
+    }
+
+    @media(max-width: 620px) {
+      .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 40px;
+        font-size: 18px;
+      }
     }
 
     .header-tab-icon {

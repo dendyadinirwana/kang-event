@@ -38,11 +38,12 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
 
     return (
         <div id="result" className="show">
-            <div className="result-hdr">
+            <div className="result-hdr" style={{ marginBottom: '20px' }}>
                 <div className="result-title" id="result-title">{eventName}</div>
                 <div className="result-meta">
-                    <span className="badge badge-accent" id="badge-type">{eventTypeLabel}</span>
-                    <span className="badge badge-gold" id="badge-class">{guestClassLabel}</span>
+                    <span className="badge badge-accent" id="badge-location">{kotaLabel}</span>
+                    <span className="badge badge-gold" id="badge-type">{eventTypeLabel}</span>
+                    <span className="badge badge-silver" id="badge-class">{guestClassLabel}</span>
                 </div>
             </div>
 

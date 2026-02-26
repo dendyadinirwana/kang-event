@@ -140,7 +140,12 @@ export default function App() {
       <ThemeToggle />
       <Layout activeTab={activeTab} onTabChange={setActiveTab} hasChecklist={checklist.length > 0}>
         {activeTab === 'panduan' ? (
-          <GuidePage initialOpenSection={guideOpenSection} onSectionOpened={() => setGuideOpenSection(null)} />
+          <GuidePage
+            initialOpenSection={guideOpenSection}
+            onSectionOpened={() => setGuideOpenSection(null)}
+            inputData={lastInputData}
+            result={result}
+          />
         ) : activeTab === 'checklist' ? (
           <ChecklistPage
             checklist={checklist}

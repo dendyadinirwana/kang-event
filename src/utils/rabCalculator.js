@@ -318,7 +318,8 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
 
     return {
         sections, formasi, luasMin: Math.round(luasMin), luasIdeal: Math.round(luasIdeal),
-        proyektorJml, micNS, micPes, hari, totalHadir
+        proyektorJml, micNS, micPes, hari, totalHadir,
+        peserta: totalPeserta, panitia, narasumber, duration
     };
 }
 

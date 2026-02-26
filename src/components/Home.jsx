@@ -11,6 +11,7 @@ import ChecklistPage from './ChecklistPage';
 import Disclaimer from './Disclaimer';
 import PriceOverrides from './PriceOverrides';
 import GuidePage from './GuidePage';
+import { buildRAB, buildChecklist } from '../utils/rabCalculator';
 
 export default function Home() {
     const [eventData, setEventData] = useState({

@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.6.1] - 2026-02-27
+
+### Fixed
+- **Critical:** Tombol "Simulasikan Kegiatan" tidak menghasilkan output RAB, Checklist, maupun Panduan karena fungsi `buildRAB` dan `buildChecklist` tidak diimpor ke `Home.jsx`. Diperbaiki dengan menambahkan import yang hilang dari `utils/rabCalculator`.
+- Sisa CSS lama (`flex-direction: column` pada `.app-header`) yang menyebabkan hamburger menu mobile bergeser ke tengah halaman dan tidak sejajar dengan logo.
+
+---
+
 ## [0.6.0] - 2026-02-27
 
 ### Added

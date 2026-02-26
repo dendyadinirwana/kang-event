@@ -3,7 +3,7 @@ import { useState, useRef } from 'react';
 // Format Rupiah helper
 const rp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
-export default function RABResult({ result, checklist, eventName, kotaLabel, eventTypeLabel, guestClassLabel }) {
+export default function RABResult({ result, checklist, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToGuide }) {
     if (!result) return null;
 
     const { sections, formasi, luasMin, luasIdeal, proyektorJml, micNS, micPes, hari, totalHadir } = result;
@@ -35,6 +35,7 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
         txt += '='.repeat(80) + '\n';
         txt += 'GRAND TOTAL\t\t\t\t' + rp(grandTotal) + '\n';
         txt += `Belum termasuk PPN 11% (${rp(ppn)}) • Total+PPN: ${rp(grandTotal + ppn)}\n`;
+        txt += `Referensi: PMK 32/2025 tentang SBM TA 2026\n`;
         navigator.clipboard.writeText(txt).then(() => alert('RAB berhasil di-copy! ✅')).catch(err => console.error(err));
     };
 
@@ -67,7 +68,7 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
                     <div className="linfo-item"><span>Mic Narasumber:</span><strong>{micNS} unit (clip/condenser)</strong></div>
                     <div className="linfo-item"><span>Floor Mic Peserta:</span><strong>{micPes} unit</strong></div>
                     <div className="linfo-item"><span>Backdrop Utama:</span><strong>Diperlukan</strong></div>
-                    <div className="linfo-item"><span>Referensi Harga:</span><strong>Standar Biaya Masukan Kemenkeu 2026 — {kotaLabel}</strong></div>
+                    <div className="linfo-item"><span>Referensi Harga:</span><strong>PMK 32/2025 SBM TA 2026 — {kotaLabel}</strong></div>
                 </div>
             </div>
 
@@ -80,7 +81,7 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
             <div className="grand-total" style={{ marginTop: '20px' }}>
                 <div className="gt-left">
                     <div className="gt-label">Total Estimasi RAB</div>
-                    <div className="gt-sub" id="gt-sub">Belum termasuk PPN 11% ({rp(ppn)}) • Total+PPN: {rp(grandTotal + ppn)}<br />Referensi: SBM Kemenkeu &amp; e-Katalog LKPP — {kotaLabel}</div>
+                    <div className="gt-sub" id="gt-sub">Belum termasuk PPN 11% ({rp(ppn)}) • Total+PPN: {rp(grandTotal + ppn)}<br />Referensi: PMK 32/2025 tentang SBM TA 2026 — {kotaLabel}</div>
                 </div>
                 <div className="gt-val" id="gt-val">{rp(grandTotal)}</div>
             </div>
@@ -92,7 +93,21 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
             <div id="checklist">
                 {checklist.map((group, gIdx) => (
                     <div className="cl-group" key={gIdx}>
-                        <div className="cl-cat">{group.cat}</div>
+                        <div className="cl-cat" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            <span>{group.cat}</span>
+                            {group.guideRef && onNavigateToGuide && (
+                                <button
+                                    className="cl-guide-link"
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        onNavigateToGuide(group.guideRef);
+                                    }}
+                                    title="Lihat panduan terkait"
+                                >
+                                    📖 Lihat Panduan
+                                </button>
+                            )}
+                        </div>
                         {group.items.map((it, iIdx) => (
                             <ChecklistItem key={iIdx} text={it} />
                         ))}

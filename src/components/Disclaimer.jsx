@@ -14,7 +14,7 @@ export default function Disclaimer() {
                 <span
                     style={{
                         fontSize: '11px',
-                        color: '#92400e',
+                        color: 'var(--disclaimer-title)',
                         transition: 'transform .2s',
                         display: 'inline-block',
                         transform: isOpen ? 'rotate(180deg)' : 'none'
@@ -25,7 +25,7 @@ export default function Disclaimer() {
             </div>
             {isOpen && (
                 <div className="disclaimer-body" style={{ marginTop: '8px' }}>
-                    Harga dalam tool ini adalah <strong>estimasi pasar</strong>, bukan angka resmi dari dokumen SBM. Pastikan diverifikasi ke sumber resmi sebelum digunakan untuk dokumen anggaran negara:
+                    Harga honorarium dan konsumsi mengacu pada <strong>PMK 32/2025 tentang SBM TA 2026</strong>. Harga sewa peralatan dan venue menggunakan <strong>estimasi pasar</strong>. Verifikasi ke sumber resmi sebelum digunakan untuk dokumen anggaran negara:
                     <ul>
                         <li><strong>Instansi Pemerintah (RKA-K/L):</strong> Wajib mengacu pada <strong>PMK 32/2025 tentang SBM TA 2026</strong> — download di <a href="https://jdih.kemenkeu.go.id" target="_blank" rel="noreferrer">jdih.kemenkeu.go.id</a></li>
                         <li><strong>Pengadaan Barang/Jasa:</strong> Cek harga e-Katalog di <a href="https://e-katalog.lkpp.go.id" target="_blank" rel="noreferrer">e-katalog.lkpp.go.id</a></li>

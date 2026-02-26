@@ -30,22 +30,22 @@ export const HARGA = {
     nametag: { nama: 'Name Tag + Holder', sat: 'pcs', harga: { jakarta: 8000, bandung: 7000, surabaya: 7500, yogyakarta: 6500, medan: 7000, makassar: 7000, daerah: 6000 } },
     meja_backdrop: { nama: 'Frame Backdrop + Besi (sewa)', sat: 'unit', harga: { jakarta: 350000, bandung: 280000, surabaya: 300000, yogyakarta: 250000, medan: 280000, makassar: 280000, daerah: 230000 } },
 
-    // SDM
-    mc_honor: { nama: 'Honorarium MC / Host', sat: 'orang/hari', harga: { jakarta: 2000000, bandung: 1500000, surabaya: 1750000, yogyakarta: 1300000, medan: 1500000, makassar: 1500000, daerah: 1200000 } },
-    moderator_honor: { nama: 'Honorarium Moderator', sat: 'orang/hari', harga: { jakarta: 2500000, bandung: 2000000, surabaya: 2200000, yogyakarta: 1800000, medan: 2000000, makassar: 2000000, daerah: 1500000 } },
-    narasumber_honor: { nama: 'Honorarium Narasumber', sat: 'orang/hari', harga: { jakarta: 5000000, bandung: 4000000, surabaya: 4500000, yogyakarta: 3500000, medan: 4000000, makassar: 4000000, daerah: 3000000 } },
-    operator_honor: { nama: 'Honorarium Operator / Asrot', sat: 'orang/hari', harga: { jakarta: 500000, bandung: 400000, surabaya: 450000, yogyakarta: 375000, medan: 400000, makassar: 400000, daerah: 350000 } },
+    // SDM — SBM TA 2026 (PMK 32/2025) — flat rates, not regional
+    mc_honor: { nama: 'Honorarium MC / Pembawa Acara', sat: 'orang/kegiatan', harga: { jakarta: 400000, bandung: 400000, surabaya: 400000, yogyakarta: 400000, medan: 400000, makassar: 400000, daerah: 400000 } },
+    moderator_honor: { nama: 'Honorarium Moderator', sat: 'orang/kegiatan', harga: { jakarta: 700000, bandung: 700000, surabaya: 700000, yogyakarta: 700000, medan: 700000, makassar: 700000, daerah: 700000 } },
+    narasumber_honor: { nama: 'Honorarium Narasumber (Eselon III kebawah)', sat: 'OJ', harga: { jakarta: 900000, bandung: 900000, surabaya: 900000, yogyakarta: 900000, medan: 900000, makassar: 900000, daerah: 900000 } },
+    operator_honor: { nama: 'Honorarium Operator / Asrot', sat: 'orang/kegiatan', harga: { jakarta: 300000, bandung: 300000, surabaya: 300000, yogyakarta: 300000, medan: 300000, makassar: 300000, daerah: 300000 } },
     fotografer_honor: { nama: 'Honorarium Fotografer', sat: 'orang/hari', harga: { jakarta: 1500000, bandung: 1200000, surabaya: 1350000, yogyakarta: 1100000, medan: 1200000, makassar: 1200000, daerah: 1000000 } },
     videografer_honor: { nama: 'Honorarium Videografer', sat: 'orang/hari', harga: { jakarta: 2000000, bandung: 1600000, surabaya: 1800000, yogyakarta: 1500000, medan: 1600000, makassar: 1600000, daerah: 1350000 } },
     interpreter_honor: { nama: 'Honorarium Interpreter', sat: 'orang/hari', harga: { jakarta: 3000000, bandung: 2500000, surabaya: 2750000, yogyakarta: 2200000, medan: 2500000, makassar: 2500000, daerah: 2000000 } },
-    notulen_honor: { nama: 'Honorarium Notulen', sat: 'orang/hari', harga: { jakarta: 500000, bandung: 400000, surabaya: 450000, yogyakarta: 375000, medan: 400000, makassar: 400000, daerah: 350000 } },
+    notulen_honor: { nama: 'Honorarium Notulen', sat: 'orang/kegiatan', harga: { jakarta: 300000, bandung: 300000, surabaya: 300000, yogyakarta: 300000, medan: 300000, makassar: 300000, daerah: 300000 } },
     keamanan_honor: { nama: 'Honor Petugas Keamanan', sat: 'orang/hari', harga: { jakarta: 350000, bandung: 280000, surabaya: 300000, yogyakarta: 250000, medan: 280000, makassar: 280000, daerah: 230000 } },
-    panitia_honor: { nama: 'Honorarium Panitia Pelaksana', sat: 'orang/hari', harga: { jakarta: 400000, bandung: 320000, surabaya: 350000, yogyakarta: 290000, medan: 320000, makassar: 320000, daerah: 270000 } },
+    panitia_honor: { nama: 'Honorarium Panitia Pelaksana', sat: 'orang/kegiatan', harga: { jakarta: 300000, bandung: 300000, surabaya: 300000, yogyakarta: 300000, medan: 300000, makassar: 300000, daerah: 300000 } },
 
-    // Konsumsi
-    snack: { nama: 'Snack / Coffee Break', sat: 'orang/sesi', harga: { jakarta: 45000, bandung: 38000, surabaya: 40000, yogyakarta: 35000, medan: 38000, makassar: 38000, daerah: 32000 } },
-    makan_siang: { nama: 'Makan Siang (prasmanan/box)', sat: 'orang', harga: { jakarta: 95000, bandung: 80000, surabaya: 85000, yogyakarta: 75000, medan: 80000, makassar: 80000, daerah: 70000 } },
-    makan_vip: { nama: 'Makan VIP / Welcome Dinner', sat: 'orang', harga: { jakarta: 250000, bandung: 200000, surabaya: 220000, yogyakarta: 185000, medan: 200000, makassar: 200000, daerah: 175000 } },
+    // Konsumsi — SBM TA 2026 (PMK 32/2025) — varies by province
+    snack: { nama: 'Kudapan / Coffee Break', sat: 'orang/rapat', harga: { jakarta: 24000, bandung: 20000, surabaya: 21000, yogyakarta: 19000, medan: 21000, makassar: 20000, daerah: 18000 } },
+    makan_siang: { nama: 'Makan Siang (prasmanan/box)', sat: 'orang/rapat', harga: { jakarta: 57000, bandung: 48000, surabaya: 50000, yogyakarta: 45000, medan: 48000, makassar: 47000, daerah: 42000 } },
+    makan_vip: { nama: 'Makan VIP/Pejabat (Eselon I keatas)', sat: 'orang/rapat', harga: { jakarta: 118000, bandung: 93000, surabaya: 95000, yogyakarta: 90000, medan: 93000, makassar: 90000, daerah: 85000 } },
     air_mineral: { nama: 'Air Mineral (galon + gelas)', sat: 'paket/hari', harga: { jakarta: 150000, bandung: 120000, surabaya: 135000, yogyakarta: 110000, medan: 120000, makassar: 120000, daerah: 100000 } },
 
     // Materi & Cetakan
@@ -62,19 +62,19 @@ export const HARGA = {
 
 export const OVERRIDE_ITEMS = [
     // Honorarium (SBM-regulated)
-    { key: 'narasumber_honor', label: 'Honor Narasumber (per orang/hari)', section: '👤 Honorarium (SBM PMK 32/2025)' },
-    { key: 'moderator_honor', label: 'Honor Moderator (per orang/hari)', section: null },
-    { key: 'mc_honor', label: 'Honor MC / Host (per orang/hari)', section: null },
-    { key: 'panitia_honor', label: 'Honor Panitia (per orang/hari)', section: null },
-    { key: 'operator_honor', label: 'Honor Operator/Asrot (per orang/hari)', section: null },
+    { key: 'narasumber_honor', label: 'Honor Narasumber (per OJ = 60 menit)', section: '👤 Honorarium — SBM TA 2026 (PMK 32/2025)' },
+    { key: 'moderator_honor', label: 'Honor Moderator (per kegiatan)', section: null },
+    { key: 'mc_honor', label: 'Honor MC / Pembawa Acara (per kegiatan)', section: null },
+    { key: 'panitia_honor', label: 'Honor Panitia (per kegiatan)', section: null },
+    { key: 'operator_honor', label: 'Honor Operator/Asrot (per kegiatan)', section: null },
     { key: 'fotografer_honor', label: 'Honor Fotografer (per orang/hari)', section: null },
     { key: 'videografer_honor', label: 'Honor Videografer (per orang/hari)', section: null },
     { key: 'interpreter_honor', label: 'Honor Interpreter (per orang/hari)', section: null },
-    { key: 'notulen_honor', label: 'Honor Notulen (per orang/hari)', section: null },
+    { key: 'notulen_honor', label: 'Honor Notulen (per kegiatan)', section: null },
     // Konsumsi (SBM-regulated)
-    { key: 'snack', label: 'Snack / Coffee Break (per orang/sesi)', section: '☕ Konsumsi (SBM PMK 32/2025)' },
-    { key: 'makan_siang', label: 'Makan Siang (per orang)', section: null },
-    { key: 'makan_vip', label: 'Makan VIP/Gala Dinner (per orang)', section: null },
+    { key: 'snack', label: 'Kudapan / Coffee Break (per orang/rapat)', section: '☕ Konsumsi — SBM TA 2026 (PMK 32/2025)' },
+    { key: 'makan_siang', label: 'Makan Siang (per orang/rapat)', section: null },
+    { key: 'makan_vip', label: 'Makan VIP/Pejabat (per orang/rapat)', section: null },
     // Venue & AV (harga pasar)
     { key: 'sewa_ruang', label: 'Sewa Ruang / Ballroom (per hari)', section: '🏛️ Venue & AV (harga pasar/e-Katalog)' },
     { key: 'proyektor', label: 'Sewa Proyektor (per unit/hari)', section: null },
@@ -205,15 +205,18 @@ export function buildRAB(input, overrides = {}) {
     sections.push({ label: '🌸 Dekorasi & Properti', items: decor });
 
     const sdm = [];
-    if (narasumber > 0) sdm.push(row('narasumber_honor', kota, narasumber * hari, overrides));
-    if (moderator > 0) sdm.push(row('moderator_honor', kota, moderator * hari, overrides));
-    if (mc > 0) sdm.push(row('mc_honor', kota, mc * hari, overrides));
-    if (panitia > 0) sdm.push(row('panitia_honor', kota, panitia * hari, overrides));
-    if (team.includes('asrot')) sdm.push(row('operator_honor', kota, 2 * hari, overrides, 'orang/hari', '2 operator teknis'));
+    // SBM: narasumber per OJ (1 OJ = 60 menit), assumed 2 OJ per session per hari
+    const ojPerHari = 2;
+    if (narasumber > 0) sdm.push({ ...row('narasumber_honor', kota, narasumber * ojPerHari * hari, overrides, 'OJ'), note: `${narasumber} narasumber × ${ojPerHari} OJ/hari × ${hari} hari` });
+    // SBM: moderator, MC, panitia per kegiatan (flat per event day)
+    if (moderator > 0) sdm.push({ ...row('moderator_honor', kota, moderator * hari, overrides, 'orang/kegiatan'), note: `${moderator} moderator × ${hari} hari` });
+    if (mc > 0) sdm.push({ ...row('mc_honor', kota, mc * hari, overrides, 'orang/kegiatan'), note: `${mc} MC × ${hari} hari` });
+    if (panitia > 0) sdm.push({ ...row('panitia_honor', kota, panitia * hari, overrides, 'orang/kegiatan'), note: `${panitia} panitia × ${hari} hari` });
+    if (team.includes('asrot')) sdm.push({ ...row('operator_honor', kota, 2 * hari, overrides, 'orang/kegiatan'), note: '2 operator teknis' });
     if (team.includes('fotografer')) sdm.push(row('fotografer_honor', kota, 1 * hari, overrides));
     if (team.includes('videografer')) sdm.push(row('videografer_honor', kota, 1 * hari, overrides));
     if (team.includes('interpreter')) sdm.push(row('interpreter_honor', kota, 1 * hari, overrides));
-    if (team.includes('notulen')) sdm.push(row('notulen_honor', kota, 1 * hari, overrides));
+    if (team.includes('notulen')) sdm.push({ ...row('notulen_honor', kota, 1 * hari, overrides, 'orang/kegiatan'), note: '1 notulen' });
     if (team.includes('keamanan')) sdm.push(row('keamanan_honor', kota, 3 * hari, overrides, 'orang/hari', '3 petugas keamanan'));
 
     // Filter out any nulls incase logic triggered push of a 0 qty or undefined 
@@ -223,7 +226,7 @@ export function buildRAB(input, overrides = {}) {
     const totalHadir = totalPeserta + narasumber + moderator + mc + panitia;
     if (hasSnack) {
         const sesiSnack = duration >= 8 ? 2 : 1;
-        konsumsi.push({ ...row('snack', kota, totalHadir * sesiSnack, overrides, 'orang/sesi'), note: `${sesiSnack} sesi coffee break, ${totalHadir} orang` });
+        konsumsi.push({ ...row('snack', kota, totalHadir * sesiSnack, overrides, 'orang/rapat'), note: `${sesiSnack} sesi coffee break, ${totalHadir} orang` });
     }
     if (hasMakan && !isGala) konsumsi.push({ ...row('makan_siang', kota, totalHadir, overrides), note: `${totalHadir} orang` });
     if (isGala || hasVVIP) konsumsi.push({ ...row('makan_vip', kota, (vvip + vip + narasumber + moderator + mc) || 10, overrides), note: 'gala dinner / makan VVIP' });
@@ -260,6 +263,7 @@ export function buildChecklist(input, formasi) {
     return [
         {
             cat: 'H-14 (2 Minggu Sebelum)',
+            guideRef: 'biro-umum',
             items: [
                 'Konfirmasi booking venue & jadwal',
                 'Kirim undangan & konfirmasi narasumber',
@@ -271,6 +275,7 @@ export function buildChecklist(input, formasi) {
         },
         {
             cat: 'H-7 (1 Minggu Sebelum)',
+            guideRef: 'administrasi',
             items: [
                 'Konfirmasi jumlah peserta final',
                 'Order konsumsi ke catering',
@@ -283,6 +288,7 @@ export function buildChecklist(input, formasi) {
         },
         {
             cat: 'H-1 (Hari Sebelum)',
+            guideRef: 'teknis',
             items: [
                 'Cek kondisi ruangan & layout furniture',
                 'Pasang backdrop, spanduk & dekorasi',
@@ -295,6 +301,7 @@ export function buildChecklist(input, formasi) {
         },
         {
             cat: 'Hari H — Pagi',
+            guideRef: 'dekorasi',
             items: [
                 'Arrive H-2 jam sebelum acara',
                 'Final check AV & sound',
@@ -307,6 +314,7 @@ export function buildChecklist(input, formasi) {
         },
         {
             cat: 'Hari H — Selama Acara',
+            guideRef: 'sdm',
             items: [
                 'Monitor mic & sound selama sesi',
                 'Catat absensi & tanda tangan peserta',
@@ -317,6 +325,7 @@ export function buildChecklist(input, formasi) {
         },
         {
             cat: 'Pasca Acara',
+            guideRef: 'administrasi',
             items: [
                 'Distribusi sertifikat ke peserta',
                 'Kumpulkan evaluasi / feedback form',

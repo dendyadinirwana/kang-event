@@ -7,6 +7,9 @@ import SupportTeam from './components/SupportTeam';
 import Decorations from './components/Decorations';
 import RABResult from './components/RABResult';
 import Disclaimer from './components/Disclaimer';
+import PriceOverrides from './components/PriceOverrides';
+import GuidePage from './components/GuidePage';
+import ThemeToggle from './components/ThemeToggle';
 import { buildRAB, buildChecklist } from './utils/rabCalculator';
 
 export default function App() {
@@ -36,6 +39,9 @@ export default function App() {
 
   const [result, setResult] = useState(null);
   const [checklist, setChecklist] = useState([]);
+  const [overrides, setOverrides] = useState({});
+  const [activeTab, setActiveTab] = useState('simulasi');
+  const [guideOpenSection, setGuideOpenSection] = useState(null);
 
   const resultRef = useRef(null);
 
@@ -49,6 +55,18 @@ export default function App() {
 
   const handleTeamCountChange = (key, value) => {
     setTeamCounts(prev => ({ ...prev, [key]: value }));
+  };
+
+  const handleOverrideChange = (key, value) => {
+    setOverrides(prev => {
+      const next = { ...prev };
+      if (value === undefined || value === '') {
+        delete next[key];
+      } else {
+        next[key] = Number(value);
+      }
+      return next;
+    });
   };
 
   const generateRAB = () => {
@@ -80,7 +98,7 @@ export default function App() {
       decorChips: decorations
     };
 
-    const calculatedResult = buildRAB(inputData);
+    const calculatedResult = buildRAB(inputData, overrides);
     const generatedChecklist = buildChecklist(inputData, calculatedResult.formasi);
 
     setResult(calculatedResult);
@@ -108,58 +126,78 @@ export default function App() {
   const finalEventName = eventData.eventName || evLabels[eventData.eventType];
 
   return (
-    <Layout>
-      <EventDetails
-        data={eventData}
-        onChange={handleEventDataChange}
-      />
+    <>
+      <ThemeToggle />
+      <Layout activeTab={activeTab} onTabChange={setActiveTab}>
+        {activeTab === 'panduan' ? (
+          <GuidePage initialOpenSection={guideOpenSection} onSectionOpened={() => setGuideOpenSection(null)} />
+        ) : (
+          <>
+            <EventDetails
+              data={eventData}
+              onChange={handleEventDataChange}
+            />
 
-      <GuestClass
-        guestClass={guestClass}
-        onChangeClass={setGuestClass}
-        guestCounts={guestCounts}
-        onChangeCounts={handleGuestCountChange}
-      />
+            <GuestClass
+              guestClass={guestClass}
+              onChangeClass={setGuestClass}
+              guestCounts={guestCounts}
+              onChangeCounts={handleGuestCountChange}
+            />
 
-      <TeamCounters
-        teamCounts={teamCounts}
-        onChangeCount={handleTeamCountChange}
-      />
+            <TeamCounters
+              teamCounts={teamCounts}
+              onChangeCount={handleTeamCountChange}
+            />
 
-      <SupportTeam
-        selectedSupport={supportTeam}
-        onChangeSupport={setSupportTeam}
-      />
+            <SupportTeam
+              selectedSupport={supportTeam}
+              onChangeSupport={setSupportTeam}
+            />
 
-      <Decorations
-        data={eventData}
-        onChangeData={handleEventDataChange}
-        selectedDecor={decorations}
-        onChangeDecor={setDecorations}
-      />
+            <Decorations
+              data={eventData}
+              onChangeData={handleEventDataChange}
+              selectedDecor={decorations}
+              onChangeDecor={setDecorations}
+            />
 
-      <Disclaimer />
+            <PriceOverrides
+              overrides={overrides}
+              onChangeOverride={handleOverrideChange}
+              kotaLabel={kotaLabel}
+            />
 
-      <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
-        <button className="claude-btn claude-btn-primary" onClick={generateRAB} style={{ padding: '14px 24px', fontSize: '15px' }}>
-          <span style={{ fontSize: '18px' }}>✨</span> Generate RAB &amp; Perlengkapan
-        </button>
-      </div>
+            <Disclaimer />
 
-      <div style={{ borderBottom: '2px solid var(--border)', margin: '32px 0' }}></div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+              <button className="claude-btn claude-btn-primary" onClick={generateRAB} style={{ padding: '14px 24px', fontSize: '15px' }}>
+                <span style={{ fontSize: '18px' }}>✨</span> Simulasikan Kegiatan
+              </button>
+            </div>
 
-      <div ref={resultRef}>
-        {result && (
-          <RABResult
-            result={result}
-            checklist={checklist}
-            eventName={finalEventName}
-            kotaLabel={kotaLabel}
-            eventTypeLabel={evLabels[eventData.eventType]}
-            guestClassLabel={gcLabels[guestClass]}
-          />
+            <div style={{ borderBottom: '2px solid var(--border)', margin: '32px 0' }}></div>
+
+            <div ref={resultRef}>
+              {result && (
+                <RABResult
+                  result={result}
+                  checklist={checklist}
+                  eventName={finalEventName}
+                  kotaLabel={kotaLabel}
+                  eventTypeLabel={evLabels[eventData.eventType]}
+                  guestClassLabel={gcLabels[guestClass]}
+                  onNavigateToGuide={(sectionId) => {
+                    setGuideOpenSection(sectionId);
+                    setActiveTab('panduan');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                />
+              )}
+            </div>
+          </>
         )}
-      </div>
-    </Layout>
+      </Layout>
+    </>
   );
 }

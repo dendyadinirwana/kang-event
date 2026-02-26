@@ -1641,12 +1641,6 @@
         box-shadow: none;
       }
 
-      .app-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 16px;
-      }
-
       .docs-container {
         padding: 0;
       }

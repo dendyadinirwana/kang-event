@@ -2649,7 +2649,7 @@
     /* Shared Page Hero (used by About and Feedback pages) */
     .page-hero {
       text-align: center;
-      padding: 48px 20px 28px;
+      padding: 20px 20px 28px;
     }
 
     .page-hero-sub {
@@ -2794,7 +2794,7 @@
     =================================================== */
     .feedback-hero {
       text-align: center;
-      padding: 56px 20px 32px;
+      padding: 20px 20px 32px;
     }
 
     .feedback-hero-icon {
@@ -3287,6 +3287,7 @@
         display: none;
       }
     }
+
     /* ========== COLLAPSIBLE BODY (smooth max-height transition) ========== */
     /* Used by Decorations, PriceOverrides, SeminarKit */
     .collapsible-body {
@@ -3319,8 +3320,15 @@
     }
 
     @keyframes fadeOutUp {
-      from { opacity: 1; transform: translateX(-50%) translateY(0); }
-      to   { opacity: 0; transform: translateX(-50%) translateY(-12px); }
+      from {
+        opacity: 1;
+        transform: translateX(-50%) translateY(0);
+      }
+
+      to {
+        opacity: 0;
+        transform: translateX(-50%) translateY(-12px);
+      }
     }
 
     /* ========== DISABLED COUNTER BUTTONS ========== */
@@ -3337,4 +3345,3 @@
       outline-offset: 2px;
       border-radius: 4px;
     }
-

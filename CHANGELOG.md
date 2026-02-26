@@ -6,6 +6,14 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.6.2] - 2026-02-27
+
+### Added
+- **Mobile Drawer UX:** Menambahkan tombol tutup (X) eksplisit yang lebih jelas di dalam mobile menu drawer.
+- **Mobile Drawer Overlay:** Menambahkan area *backdrop/overlay* gelap semi-transparan di belakang menu. Kini *hamburger menu* akan otomatis menutup saat pengguna mengeklik area di luar kotak menu.
+
+---
+
 ## [0.6.1] - 2026-02-27
 
 ### Fixed

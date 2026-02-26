@@ -69,28 +69,41 @@ export default function AppHeader() {
                 </div>
             </header>
 
-            {/* Mobile Drawer */}
+            {/* Mobile Drawer Overlay & Content */}
             {menuOpen && (
-                <div className="mobile-nav-drawer">
-                    {navLinks.map((link) => (
-                        <Link
-                            key={link.path}
-                            to={link.path}
-                            className={`mobile-nav-link ${isActive(link) ? 'active' : ''}`}
-                            onClick={() => setMenuOpen(false)}
-                        >
-                            <span className="mobile-nav-icon">{link.icon}</span>
-                            {link.name}
-                        </Link>
-                    ))}
+                <>
+                    {/* Backdrop to close when clicking outside */}
+                    <div className="mobile-nav-backdrop" onClick={() => setMenuOpen(false)} />
 
-                    {/* Theme Toggle within Mobile Drawer */}
-                    <div className="mobile-nav-theme-toggle">
-                        <span className="mobile-nav-icon">🌗</span>
-                        <div style={{ flex: 1 }}>Mode Tampilan</div>
-                        <ThemeToggle />
+                    <div className="mobile-nav-drawer">
+                        {/* Explicit Close Button inside Drawer for better UX */}
+                        <div className="mobile-nav-drawer-header">
+                            <span style={{ fontWeight: 600, color: 'var(--text-muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Menu Navigasi</span>
+                            <button className="mobile-nav-close-btn" onClick={() => setMenuOpen(false)}>
+                                ✕
+                            </button>
+                        </div>
+
+                        {navLinks.map((link) => (
+                            <Link
+                                key={link.path}
+                                to={link.path}
+                                className={`mobile-nav-link ${isActive(link) ? 'active' : ''}`}
+                                onClick={() => setMenuOpen(false)}
+                            >
+                                <span className="mobile-nav-icon">{link.icon}</span>
+                                {link.name}
+                            </Link>
+                        ))}
+
+                        {/* Theme Toggle within Mobile Drawer */}
+                        <div className="mobile-nav-theme-toggle">
+                            <span className="mobile-nav-icon">🌗</span>
+                            <div style={{ flex: 1 }}>Mode Tampilan</div>
+                            <ThemeToggle />
+                        </div>
                     </div>
-                </div>
+                </>
             )}
         </div>
     );

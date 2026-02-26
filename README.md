@@ -66,7 +66,7 @@ Aplikasi web berbasis React untuk membantu panitia acara merencanakan kegiatan s
 
 ## 🛠️ Development
 
-> **Latest stable release:** v0.6.1 — Hotfix for simulation button not producing RAB/Checklist output.
+> **Latest stable release:** v0.6.2 — Mobile Nav UX Hotfix (Backdrop overlay & Close Button).
 
 ```bash
 # Install dependencies

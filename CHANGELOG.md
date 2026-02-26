@@ -6,9 +6,28 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
-## [0.5.0] - 2026-02-27
+## [0.6.0] - 2026-02-27
 
 ### Added
+- **Multi-page Architecture**: Implementasi `react-router-dom` untuk navigasi antar halaman (Home, Feedback, About).
+- **Global Sticky Header**: Header mengambang bergaya pill yang bertransisi mulus (cubic-bezier) menjadi sticky bar saat scroll.
+- **Halaman Feedback (Beri Masukan)**: Form interaktif yang terintegrasi dengan API **Web3Forms** untuk pengiriman email otomatis tanpa backend.
+- **Halaman About (Tentang Aplikasi)**: Menampilkan statistik, fitur utama, dan informasi developer.
+- Opsi perangkat **Handy Talkie (HT)** pada section Tim Pendukung.
+- **Formasi Duduk Campuran**: 5 opsi formasi duduk khusus (Round Table Mix, Sofa Lounge + Kursi, Banquet Mix, Cabaret Mix, U-Shape + Pax) otomatis muncul saat Kelas Tamu "Campuran VVIP/VIP/Reguler" dipilih.
+
+### Changed
+- **Mobile UX**: Theme toggle dipindahkan dari header ke dalam overlay hamburger menu navigation drawer pada layar kecil agar tidak sesak.
+- **Mobile Navbar**: Drawer navigasi diubah menjadi fixed overlay yang muncul di atas konten halaman (tidak mendorong konten ke bawah).
+- Transisi Theme Toggle diubah menggunakan style "Pill" modern dengan sliding emoji indicator (☀️/🌙).
+- Tipografi judul halaman About dan Feedback disamakan secara konsisten dengan logo header home page.
+
+### Removed
+- Tautan dan route ke halaman Documentation dihapus sesuai kebutuhan simplifikasi.
+
+---
+
+## [0.5.0] - 2026-02-27
 - **Checklist Persiapan** sebagai halaman tab tersendiri (terpisah dari halaman Simulasi Kegiatan)
 - Halaman Checklist dilengkapi: progress bar, grouping per timeline (H-14, H-7, H-1, Hari H, Pasca Acara), per-item detail & vendor, PIC input, dan tombol "Save as PDF"
 - CTA banner di bawah RAB untuk navigasi langsung ke halaman Checklist

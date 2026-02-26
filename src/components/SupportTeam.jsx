@@ -19,6 +19,7 @@ export default function SupportTeam({ selectedSupport, onChangeSupport }) {
         { value: 'medis', label: '🏥 Tim Medis / P3K' },
         { value: 'parkir', label: '🚗 Petugas Parkir' },
         { value: 'it_support', label: '💻 IT Support' },
+        { value: 'ht', label: '📻 Handy Talkie (HT)' },
         { value: 'liaison', label: '🧑‍💼 Liaison Officer (LO)' }
     ];
 

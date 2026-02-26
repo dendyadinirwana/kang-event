@@ -1,8 +1,40 @@
 import { useState } from 'react';
 import ToggleChips from './ToggleChips';
 
-export default function Decorations({ data, onChangeData, selectedDecor, onChangeDecor }) {
+// Mixed-class seating formations specific to when guestClass is 'campuran'
+const MIXED_SEATING_OPTIONS = [
+    {
+        value: 'mixed_roundtable',
+        label: '🪑 Round Table Mix',
+        desc: 'Meja bundar untuk VVIP/VIP di area terpisah, kursi biasa untuk peserta reguler. Nuansa formal eksklusif.',
+    },
+    {
+        value: 'mixed_sofa_lounge',
+        label: '🛋️ Sofa Lounge + Kursi',
+        desc: 'Sofa atau kursi lounge untuk tamu VIP/VVIP di area terdepan, sisanya kursi konferensi standar.',
+    },
+    {
+        value: 'mixed_banquet',
+        label: '🍽️ Banquet Mix',
+        desc: 'Meja makan 8–10 pax, letak VVIP/VIP di meja utama (head table) dengan dekorasi terpisah.',
+    },
+    {
+        value: 'mixed_cabaret',
+        label: '🎭 Cabaret Mix',
+        desc: 'Meja cluster (setengah lingkaran), cocok untuk workshop atau diskusi panel. Zona VIP di depan.',
+    },
+    {
+        value: 'mixed_ushape_plus',
+        label: '🔱 U-Shape + Pax',
+        desc: 'U-Shape untuk panitia inti & VIP, kursi tambahan di luar U untuk peserta reguler.',
+    },
+];
+
+export default function Decorations({ data, onChangeData, selectedDecor, onChangeDecor, guestClass }) {
     const [isOpen, setIsOpen] = useState(true);
+    const [mixedSeating, setMixedSeating] = useState('mixed_roundtable');
+    const isMixed = guestClass === 'campuran';
+
     const options = [
         { value: 'standing_flower', label: '🌸 Standing Flower' },
         { value: 'table_flower', label: '💐 Bunga Meja' },
@@ -48,6 +80,7 @@ export default function Decorations({ data, onChangeData, selectedDecor, onChang
 
             {isOpen && (
                 <div style={{ marginTop: '16px', borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+                    {/* Standard seating and style */}
                     <div className="grid-2" style={{ marginBottom: '12px' }}>
                         <div className="field">
                             <label>Gaya Dekorasi</label>
@@ -72,6 +105,39 @@ export default function Decorations({ data, onChangeData, selectedDecor, onChang
                             </select>
                         </div>
                     </div>
+
+                    {/* MIXED-CLASS SEATING SECTION — only visible when guestClass === 'campuran' */}
+                    {isMixed && (
+                        <div className="mixed-seating-section">
+                            <div className="mixed-seating-header">
+                                <span>🔀</span>
+                                <div>
+                                    <div className="mixed-seating-title">Formasi Khusus Kelas Campuran</div>
+                                    <div className="mixed-seating-sub">Pilih tata letak yang memisahkan/mengintegrasikan zona VVIP, VIP, dan Reguler secara elegan.</div>
+                                </div>
+                            </div>
+                            <div className="mixed-seating-options">
+                                {MIXED_SEATING_OPTIONS.map((opt) => (
+                                    <label
+                                        key={opt.value}
+                                        className={`mixed-seating-card ${mixedSeating === opt.value ? 'selected' : ''}`}
+                                    >
+                                        <input
+                                            type="radio"
+                                            name="mixedSeating"
+                                            value={opt.value}
+                                            checked={mixedSeating === opt.value}
+                                            onChange={() => setMixedSeating(opt.value)}
+                                            style={{ display: 'none' }}
+                                        />
+                                        <div className="mixed-seating-card-label">{opt.label}</div>
+                                        <div className="mixed-seating-card-desc">{opt.desc}</div>
+                                    </label>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
                     <ToggleChips options={options} selectedValues={selectedDecor} onChange={onChangeDecor} />
                 </div>
             )}

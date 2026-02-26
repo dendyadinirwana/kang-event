@@ -39,8 +39,13 @@ Aplikasi web berbasis React untuk membantu panitia acara merencanakan kegiatan s
 - Panduan lengkap untuk venue, AV, konsumsi, transportasi, dokumentasi, dan lainnya
 - Tautan langsung dari checklist ke panduan terkait
 
+### 📧 Feedback Terintegrasi
+- Halaman khusus untuk memberikan kritik, saran fitur, atau laporan bug
+- Terintegrasi langsung dengan **Web3Forms API** untuk pengiriman email otomatis tanpa perlu aplikasi email client di perangkat user
+
 ### 🌗 Tema & UX
-- Light mode (default) / Dark mode toggle
+- Navigasi mulus dengan **Global Sticky Header** dan **Mobile Overlay Navigation**
+- Tema Light mode (default) / Dark mode toggle dengan desain *pill slider*
 - Semua section collapsible (Tim Pendukung, Dekorasi, Seminar Kit, Override Harga)
 - Inline error toast (bukan browser alert)
 
@@ -51,8 +56,10 @@ Aplikasi web berbasis React untuk membantu panitia acara merencanakan kegiatan s
 | Layer | Teknologi |
 |-------|-----------|
 | Framework | [React 18](https://react.dev) + [Vite](https://vitejs.dev) |
-| Styling | Vanilla CSS dengan CSS Variables |
+| Routing | `react-router-dom` v6 |
+| Styling | Vanilla CSS dengan CSS Variables & cubic-bezier transitions |
 | State | React `useState` (client-only, no backend) |
+| Email API | [Web3Forms](https://web3forms.com) |
 | Deployment | [Vercel](https://vercel.com) |
 
 ---

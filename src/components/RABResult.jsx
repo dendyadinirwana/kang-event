@@ -66,7 +66,6 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
                     <div className="linfo-item"><span>Mic Narasumber:</span><strong>{micNS} unit (clip/condenser)</strong></div>
                     <div className="linfo-item"><span>Floor Mic Peserta:</span><strong>{micPes} unit</strong></div>
                     <div className="linfo-item"><span>Backdrop Utama:</span><strong>Diperlukan</strong></div>
-                    <div className="linfo-item"><span>Referensi Harga:</span><strong>PMK 32/2025 SBM TA 2026 — {kotaLabel}</strong></div>
                 </div>
             </div>
 

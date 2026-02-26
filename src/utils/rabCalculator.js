@@ -271,6 +271,9 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     if (['seminar', 'workshop', 'konferensi', 'fgd'].includes(evType) && totalPeserta > 0) materi.push(row('modul', kota, totalPeserta, overrides));
     if (['seminar', 'workshop', 'konferensi'].includes(evType) && totalPeserta > 0) materi.push(row('sertifikat', kota, totalPeserta, overrides));
     if (hasVVIP || hasVIP || isGala) materi.push(row('souvenir', kota, (vvip + vip) || 10, overrides));
+    sections.push({ label: '📄 Materi Dasar Acara', items: materi.filter(Boolean) });
+
+    const kit = [];
     // Seminar Kit — per-class model (reguler / vip / vvip)
     const clsMap = [
         { cls: 'reguler', active: true },
@@ -289,14 +292,17 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
         (clsData.items || []).forEach(kitKey => {
             const kitHarga = h(kota, kitKey, overrides);
             if (!HARGA[kitKey]) return;
-            materi.push({ key: kitKey, nama: HARGA[kitKey].nama + ` (${clsLabel})`, qty, satuan: HARGA[kitKey].sat, harga: kitHarga, total: kitHarga * qty, note });
+            kit.push({ key: kitKey, nama: HARGA[kitKey].nama + ` (${clsLabel})`, qty, satuan: HARGA[kitKey].sat, harga: kitHarga, total: kitHarga * qty, note });
         });
         // Custom items
         (clsData.customItems || []).forEach(c => {
-            materi.push({ key: `custom_${c.id}`, nama: `${c.name} (${clsLabel})`, qty, satuan: 'pax', harga: c.harga, total: c.harga * qty, note });
+            kit.push({ key: `custom_${c.id}`, nama: `${c.name} (${clsLabel})`, qty, satuan: 'pax', harga: c.harga, total: c.harga * qty, note });
         });
     });
-    sections.push({ label: '📄 Materi & Perlengkapan Peserta', items: materi.filter(Boolean) });
+
+    if (kit.length > 0) {
+        sections.push({ label: '🎒 Seminar Kit', items: kit.filter(Boolean) });
+    }
 
     const logistik = [];
     logistik.push({ ...row('transportasi', kota, 1, overrides, 'paket'), note: 'transport narasumber lokal, liaison vendor AV & koordinasi lapangan' });

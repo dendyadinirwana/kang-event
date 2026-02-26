@@ -31,7 +31,7 @@ export default function Disclaimer() {
                         <li><strong>Pengadaan Barang/Jasa:</strong> Cek harga e-Katalog di <a href="https://e-katalog.lkpp.go.id" target="_blank" rel="noreferrer">e-katalog.lkpp.go.id</a></li>
                         <li><strong>Swasta / Non-APBN:</strong> Lakukan survei harga pasar lokal</li>
                     </ul>
-                    Bisa <strong>override harga satuan</strong> di panel di bawah ini (opsional) sesuai SBM atau hasil survei.
+                    Bisa <strong>override harga satuan</strong> di panel di atas (opsional) sesuai SBM atau hasil survei.
                 </div>
             )}
         </div>

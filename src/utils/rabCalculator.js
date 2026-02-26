@@ -91,7 +91,7 @@ export const OVERRIDE_ITEMS = [
 ];
 
 function h(kota, key, overrides) {
-    if (overrides[key]) return overrides[key];
+    if (overrides[key] !== undefined) return overrides[key];
     return HARGA[key]?.harga?.[kota] || HARGA[key]?.harga?.daerah || 0;
 }
 

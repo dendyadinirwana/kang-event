@@ -94,7 +94,7 @@ export default function GuidePage({ initialOpenSection, onSectionOpened }) {
             <div className="guide-footer-note">
                 <span className="icon">💡</span>
                 Panduan ini bersifat umum dan dapat disesuaikan dengan kebutuhan spesifik instansi.
-                Untuk menghitung estimasi anggaran, gunakan fitur <strong>Simulasi Kegiatan</strong>.
+                Untuk menghitung estimasi anggaran, gunakan fitur Simulasi Kegiatan.
             </div>
         </div>
     );

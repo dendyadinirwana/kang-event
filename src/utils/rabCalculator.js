@@ -53,6 +53,14 @@ export const HARGA = {
     sertifikat: { nama: 'Sertifikat (cetak)', sat: 'eks', harga: { jakarta: 15000, bandung: 12000, surabaya: 13000, yogyakarta: 11000, medan: 12000, makassar: 12000, daerah: 10000 } },
     atk: { nama: 'ATK Peserta (map, bolpen, blok)', sat: 'set/orang', harga: { jakarta: 25000, bandung: 20000, surabaya: 22000, yogyakarta: 18000, medan: 20000, makassar: 20000, daerah: 16000 } },
     souvenir: { nama: 'Souvenir / Goodie Bag Peserta', sat: 'pcs', harga: { jakarta: 75000, bandung: 60000, surabaya: 65000, yogyakarta: 55000, medan: 60000, makassar: 60000, daerah: 50000 } },
+    seminar_kit: { nama: 'Seminar Kit (tas + blocknote + pulpen)', sat: 'set/orang', harga: { jakarta: 85000, bandung: 70000, surabaya: 75000, yogyakarta: 65000, medan: 70000, makassar: 70000, daerah: 60000 } },
+    lanyard: { nama: 'Lanyard + ID Card Holder', sat: 'pcs', harga: { jakarta: 12000, bandung: 10000, surabaya: 11000, yogyakarta: 9000, medan: 10000, makassar: 10000, daerah: 8000 } },
+    flashdisk_materi: { nama: 'Flashdisk Materi (4GB)', sat: 'pcs', harga: { jakarta: 45000, bandung: 38000, surabaya: 40000, yogyakarta: 35000, medan: 38000, makassar: 38000, daerah: 32000 } },
+
+    // Desain & Branding Digital
+    desain_vbg: { nama: 'Desain Virtual Background Zoom', sat: 'paket', harga: { jakarta: 350000, bandung: 280000, surabaya: 300000, yogyakarta: 250000, medan: 280000, makassar: 280000, daerah: 220000 } },
+    thumbnail_yt: { nama: 'Desain YouTube Thumbnail', sat: 'paket', harga: { jakarta: 150000, bandung: 120000, surabaya: 135000, yogyakarta: 110000, medan: 120000, makassar: 120000, daerah: 100000 } },
+    video_bumper: { nama: 'Produksi Video Bumper / Opening Acara', sat: 'paket', harga: { jakarta: 750000, bandung: 600000, surabaya: 650000, yogyakarta: 550000, medan: 600000, makassar: 600000, daerah: 500000 } },
 
     // Venue & Logistik
     sewa_ruang: { nama: 'Sewa Ruang / Ballroom', sat: 'hari', harga: { jakarta: 15000000, bandung: 10000000, surabaya: 12000000, yogyakarta: 8000000, medan: 10000000, makassar: 10000000, daerah: 7000000 } },
@@ -88,6 +96,14 @@ export const OVERRIDE_ITEMS = [
     { key: 'backdrop', label: 'Backdrop/Spanduk (per m²)', section: '🌸 Dekorasi (harga pasar)' },
     { key: 'standing_flower', label: 'Standing Flower (per rangkaian)', section: null },
     { key: 'table_flower', label: 'Bunga Meja (per rangkaian)', section: null },
+    // Seminar Kit
+    { key: 'seminar_kit', label: 'Seminar Kit (per orang)', section: '🎒 Seminar Kit' },
+    { key: 'lanyard', label: 'Lanyard + ID Card Holder (per pcs)', section: null },
+    { key: 'flashdisk_materi', label: 'Flashdisk Materi 4GB (per pcs)', section: null },
+    // Desain Digital
+    { key: 'desain_vbg', label: 'Desain Virtual Background Zoom', section: '🎨 Desain & Branding Digital' },
+    { key: 'thumbnail_yt', label: 'Desain YouTube Thumbnail', section: null },
+    { key: 'video_bumper', label: 'Produksi Video Bumper / Opening Acara', section: null },
 ];
 
 function h(kota, key, overrides) {
@@ -232,7 +248,10 @@ export function buildRAB(input, overrides = {}) {
     if (isGala || hasVVIP) konsumsi.push({ ...row('makan_vip', kota, (vvip + vip + narasumber + moderator + mc) || 10, overrides), note: 'gala dinner / makan VVIP' });
     konsumsi.push(row('air_mineral', kota, hari, overrides, 'paket/hari'));
     if (team.includes('konsumsi')) {
-        konsumsi.push({ key: 'konsumsi_tim', nama: 'Konsumsi Panitia & Tim Teknis', qty: panitia * hari, satuan: 'orang/hari', harga: h(kota, 'makan_siang', overrides) * 0.8, total: panitia * hari * h(kota, 'makan_siang', overrides) * 0.8, note: 'makan panitia & tim' });
+        const hariPersiapan = Math.min(hari, 2);
+        const totalHariPanitia = hari + hariPersiapan;
+        const hargaMakanPanitia = h(kota, 'makan_siang', overrides) * 0.8;
+        konsumsi.push({ key: 'konsumsi_tim', nama: 'Konsumsi Panitia & Tim Teknis (termasuk hari setup)', qty: panitia * totalHariPanitia, satuan: 'orang/hari', harga: hargaMakanPanitia, total: panitia * totalHariPanitia * hargaMakanPanitia, note: `${panitia} panitia × ${totalHariPanitia} hari (${hari} hari H + ${hariPersiapan} hari H-persiapan)` });
     }
     sections.push({ label: '☕ Konsumsi & Catering', items: konsumsi });
 
@@ -242,12 +261,33 @@ export function buildRAB(input, overrides = {}) {
     if (['seminar', 'workshop', 'konferensi', 'fgd'].includes(evType) && totalPeserta > 0) materi.push(row('modul', kota, totalPeserta, overrides));
     if (['seminar', 'workshop', 'konferensi'].includes(evType) && totalPeserta > 0) materi.push(row('sertifikat', kota, totalPeserta, overrides));
     if (hasVVIP || hasVIP || isGala) materi.push(row('souvenir', kota, (vvip + vip) || 10, overrides));
+    // Seminar Kit — jika dipilih di Tim Pendukung
+    if (team.includes('seminar_kit') && totalPeserta > 0) {
+        materi.push({ ...row('seminar_kit', kota, totalPeserta, overrides, 'set/orang'), note: `${totalPeserta} peserta` });
+        materi.push({ ...row('lanyard', kota, totalHadir, overrides, 'pcs'), note: `${totalHadir} orang (peserta + panitia + narasumber)` });
+        if (['seminar', 'workshop', 'konferensi'].includes(evType)) {
+            materi.push({ ...row('flashdisk_materi', kota, totalPeserta, overrides, 'pcs'), note: `${totalPeserta} peserta` });
+        }
+    }
     sections.push({ label: '📄 Materi & Perlengkapan Peserta', items: materi.filter(Boolean) });
 
     const logistik = [];
     logistik.push(row('transportasi', kota, 1, overrides, 'paket'));
     if (team.includes('fotografer') || team.includes('videografer')) logistik.push(row('dokumentasi_edit', kota, 1, overrides, 'paket'));
     sections.push({ label: '🚛 Transportasi & Logistik', items: logistik });
+
+    // Desain & Branding Digital — muncul jika webinar/live streaming/videografer
+    const isWebinar = evType === 'webinar';
+    const hasStreaming = team.includes('live_streaming');
+    const hasVideografer = team.includes('videografer');
+    const hasBrandingDigital = isWebinar || hasStreaming || hasVideografer;
+    if (hasBrandingDigital) {
+        const branding = [];
+        if (isWebinar || hasStreaming) branding.push(row('desain_vbg', kota, 1, overrides, 'paket'));
+        if (hasStreaming) branding.push(row('thumbnail_yt', kota, 1, overrides, 'paket'));
+        if (hasVideografer || hasStreaming) branding.push(row('video_bumper', kota, 1, overrides, 'paket'));
+        if (branding.length > 0) sections.push({ label: '🎨 Desain & Branding Digital', items: branding.filter(Boolean) });
+    }
 
     return {
         sections, formasi, luasMin: Math.round(luasMin), luasIdeal: Math.round(luasIdeal),
@@ -282,7 +322,11 @@ export function buildChecklist(input, formasi) {
                 'Konfirmasi seluruh vendor AV & dekorasi',
                 'Cetak materi, modul & sertifikat',
                 'Cetak name tag & ID card peserta',
+                team.includes('seminar_kit') ? 'Siapkan & kemas seminar kit (tas, blocknote, pulpen, lanyard, flashdisk)' : null,
                 team.includes('live_streaming') ? 'Test koneksi internet & streaming setup' : null,
+                team.includes('live_streaming') ? 'Siapkan desain virtual background Zoom & kirim ke narasumber/moderator (H-3)' : null,
+                evType === 'webinar' ? 'Siapkan desain virtual background Zoom & kirim ke narasumber/moderator (H-3)' : null,
+                team.includes('live_streaming') ? 'Upload thumbnail YouTube & siapkan deskripsi video live stream' : null,
                 'Siapkan ATK & goodie bag peserta',
             ].filter(Boolean)
         },
@@ -294,9 +338,11 @@ export function buildChecklist(input, formasi) {
                 'Pasang backdrop, spanduk & dekorasi',
                 'Test semua peralatan AV (mic, proyektor, sound)',
                 team.includes('live_streaming') ? 'Test livestream end-to-end' : null,
+                (team.includes('videografer') || team.includes('live_streaming')) ? 'Pastikan video bumper/opening sudah dirender & siap diputar' : null,
                 'Briefing seluruh panitia & vendor',
                 hasVVIP ? 'Konfirmasi ulang rundown protokol VVIP' : null,
                 'Persiapkan meja registrasi & sistem absensi',
+                team.includes('konsumsi') ? 'Sediakan konsumsi tim panitia selama setup & gladi H-1' : null,
             ].filter(Boolean)
         },
         {

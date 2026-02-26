@@ -1,16 +1,84 @@
-# React + Vite
+# Simulasi Kegiatan & Perlengkapan Acara (Event Generator PPDT)
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Aplikasi web berbasis React untuk membantu panitia acara merencanakan kegiatan secara terstruktur — mulai dari estimasi Rencana Anggaran Biaya (RAB), konfigurasi seminar kit per kelas tamu, hingga checklist persiapan otomatis per timeline.
 
-Currently, two official plugins are available:
+> Referensi harga default mengacu pada **PMK Nomor 32 Tahun 2025 tentang Standar Biaya Masukan (SBM) Tahun Anggaran 2026**.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+---
 
-## React Compiler
+## ✨ Fitur Utama
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+### 🎯 Simulasi Kegiatan
+- Pilih jenis acara: Seminar, Workshop, FGD, Webinar, Konferensi, Gala Dinner, dll
+- Atur kelas tamu: Reguler, VIP, VVIP, atau Campuran
+- Input jumlah peserta, narasumber, moderator, MC, dan panitia
+- Pilih tim pendukung: Fotografer, Videografer, Live Streaming, Notulen, dll
+- Konfigurasi dekorasi dan formasi duduk
 
-## Expanding the ESLint configuration
+### 📊 RAB Otomatis
+- Kalkulasi RAB lengkap: Honorarium, Konsumsi, Venue & AV, Furniture, Dekorasi, Materi, Logistik, Desain Digital
+- Estimasi luas ruangan minimal & ideal
+- Estimasi kebutuhan proyektor dan mic
+- Harga multi-kota (Jakarta, Bandung, Surabaya, Yogyakarta, Medan, Makassar, dan Daerah)
+- **Override harga** — sesuaikan setiap item dengan harga aktual di lapangan
+- Copy RAB ke clipboard atau Save as PDF
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+### 🎒 Seminar Kit Fleksibel
+- Konfigurasi seminar kit per kelas tamu (Reguler ≠ VIP ≠ VVIP)
+- Pilih dari katalog (tas, lanyard, flashdisk, modul, sertifikat, souvenir) atau tambah item custom
+- Estimasi biaya langsung di UI sebelum simulasi dijalankan
+
+### ✅ Checklist Persiapan Otomatis
+- Halaman terpisah dengan checklist per timeline: **H-14, H-7, H-1, Hari H, Pasca Acara**
+- Detail per item dengan keterangan vendor/PIC
+- Progress bar interaktif
+- Input PIC per item checklist
+- Tombol cetak / Save as PDF
+
+### 📖 Panduan Kegiatan
+- Panduan lengkap untuk venue, AV, konsumsi, transportasi, dokumentasi, dan lainnya
+- Tautan langsung dari checklist ke panduan terkait
+
+### 🌗 Tema & UX
+- Light mode (default) / Dark mode toggle
+- Semua section collapsible (Tim Pendukung, Dekorasi, Seminar Kit, Override Harga)
+- Inline error toast (bukan browser alert)
+
+---
+
+## 🚀 Tech Stack
+
+| Layer | Teknologi |
+|-------|-----------|
+| Framework | [React 18](https://react.dev) + [Vite](https://vitejs.dev) |
+| Styling | Vanilla CSS dengan CSS Variables |
+| State | React `useState` (client-only, no backend) |
+| Deployment | [Vercel](https://vercel.com) |
+
+---
+
+## 🛠️ Development
+
+```bash
+# Install dependencies
+npm install
+
+# Run dev server
+npm run dev
+
+# Build for production
+npm run build
+```
+
+---
+
+## 📋 Changelog
+
+Lihat [CHANGELOG.md](./CHANGELOG.md) untuk riwayat perubahan lengkap.
+
+---
+
+## 📄 Referensi
+
+- [PMK Nomor 32 Tahun 2025 — SBM TA 2026](https://jdih.kemenkeu.go.id)
+- [Keep a Changelog](https://keepachangelog.com)

@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { HARGA } from '../utils/rabCalculator';
 
-const KIT_ITEMS = [
+const KIT_CATALOG = [
     { key: 'seminar_kit', label: '🎒 Tas / Tote Bag + Blocknote + Pulpen' },
     { key: 'lanyard', label: '🔖 Lanyard + ID Card Holder' },
     { key: 'flashdisk_materi', label: '💾 Flashdisk Materi (4GB)' },
@@ -12,53 +12,162 @@ const KIT_ITEMS = [
 
 const fmt = (n) => new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(n);
 
-export default function SeminarKit({ seminarKitData, onChange, peserta = 30, vip = 0, vvip = 0, guestClass = 'reguler', location = 'jakarta' }) {
-    const [isOpen, setIsOpen] = useState(false);
-    const kota = location.toLowerCase();
+const CLASS_META = {
+    reguler: { emoji: '🟡', label: 'Reguler', color: '#f59e0b' },
+    vip: { emoji: '🔵', label: 'VIP', color: '#3b82f6' },
+    vvip: { emoji: '🟠', label: 'VVIP', color: '#f97316' },
+};
 
-    const selectedItems = seminarKitData.items || [];
-    const qtys = seminarKitData.qtys || {};
+function ClassKitEditor({ cls, kitData, onChange, defaultQty, priceFor }) {
+    const meta = CLASS_META[cls];
+    const items = kitData?.items || [];
+    const customItems = kitData?.customItems || [];
+    const qty = kitData?.qty !== undefined ? kitData.qty : defaultQty;
+    const [showCustomForm, setShowCustomForm] = useState(false);
+    const [customName, setCustomName] = useState('');
+    const [customPrice, setCustomPrice] = useState('');
+
+    const update = (patch) => onChange({ ...kitData, items, customItems, qty, ...patch });
+
+    const toggleItem = (key) => {
+        const next = items.includes(key) ? items.filter(k => k !== key) : [...items, key];
+        update({ items: next });
+    };
+
+    const addCustom = () => {
+        if (!customName.trim()) return;
+        const newItem = { id: Date.now(), name: customName.trim(), harga: parseInt(customPrice) || 0 };
+        update({ customItems: [...customItems, newItem] });
+        setCustomName(''); setCustomPrice(''); setShowCustomForm(false);
+    };
+
+    const removeCustom = (id) => update({ customItems: customItems.filter(c => c.id !== id) });
+
+    const subtotal = items.reduce((s, k) => s + priceFor(k) * qty, 0)
+        + customItems.reduce((s, c) => s + c.harga * qty, 0);
+
+    return (
+        <div style={{ marginBottom: '16px' }}>
+            {/* Qty row */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '12px' }}>
+                <span style={{ fontSize: '13px', fontWeight: 600, color: meta.color }}>
+                    {meta.emoji} {meta.label}
+                </span>
+                <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Jumlah:</span>
+                <button className="qty-btn" onClick={() => update({ qty: Math.max(0, qty - 1) })}>−</button>
+                <input
+                    type="number"
+                    className="qty-input"
+                    value={qty}
+                    onChange={e => update({ qty: Math.max(0, parseInt(e.target.value) || 0) })}
+                />
+                <button className="qty-btn" onClick={() => update({ qty: qty + 1 })}>+</button>
+                {subtotal > 0 && (
+                    <span style={{ marginLeft: 'auto', fontSize: '12px', fontWeight: 700, color: 'var(--accent)' }}>
+                        {fmt(subtotal)}
+                    </span>
+                )}
+            </div>
+
+            {/* Catalog items */}
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginBottom: '8px' }}>
+                {KIT_CATALOG.map(({ key, label }) => {
+                    const selected = items.includes(key);
+                    const price = priceFor(key);
+                    return (
+                        <button
+                            key={key}
+                            onClick={() => toggleItem(key)}
+                            style={{
+                                padding: '5px 10px',
+                                borderRadius: '20px',
+                                border: `1.5px solid ${selected ? meta.color : 'var(--border2)'}`,
+                                background: selected ? `${meta.color}15` : 'var(--surface2)',
+                                color: selected ? meta.color : 'var(--text-muted)',
+                                fontSize: '12px',
+                                fontWeight: selected ? 600 : 400,
+                                cursor: 'pointer',
+                                transition: 'all 0.15s',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                            }}
+                        >
+                            {selected ? '✓ ' : ''}{label}
+                            <span style={{ fontSize: '10px', opacity: 0.7 }}>{fmt(price)}</span>
+                        </button>
+                    );
+                })}
+            </div>
+
+            {/* Custom items */}
+            {customItems.map(c => (
+                <div key={c.id} style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px', padding: '5px 10px', background: 'var(--surface2)', borderRadius: '8px', border: '1px dashed var(--border2)' }}>
+                    <span style={{ flex: 1, fontSize: '12px', color: 'var(--text)' }}>✏️ {c.name}</span>
+                    <span style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{fmt(c.harga)}/pax</span>
+                    <button onClick={() => removeCustom(c.id)} style={{ background: 'none', border: 'none', color: 'var(--text-dim)', cursor: 'pointer', fontSize: '14px' }}>×</button>
+                </div>
+            ))}
+
+            {/* Custom form */}
+            {showCustomForm ? (
+                <div style={{ display: 'flex', gap: '6px', alignItems: 'center', marginTop: '6px' }}>
+                    <input
+                        type="text"
+                        placeholder="Nama item..."
+                        value={customName}
+                        onChange={e => setCustomName(e.target.value)}
+                        style={{ flex: 1, padding: '5px 10px', borderRadius: '6px', border: '1px solid var(--border2)', background: 'var(--surface)', color: 'var(--text)', fontSize: '12px' }}
+                    />
+                    <input
+                        type="number"
+                        placeholder="Harga/pax"
+                        value={customPrice}
+                        onChange={e => setCustomPrice(e.target.value)}
+                        style={{ width: '100px', padding: '5px 8px', borderRadius: '6px', border: '1px solid var(--border2)', background: 'var(--surface)', color: 'var(--text)', fontSize: '12px' }}
+                    />
+                    <button onClick={addCustom} style={{ padding: '5px 10px', borderRadius: '6px', background: 'var(--accent)', color: '#fff', border: 'none', cursor: 'pointer', fontSize: '12px', fontWeight: 600 }}>Tambah</button>
+                    <button onClick={() => setShowCustomForm(false)} style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', fontSize: '16px' }}>×</button>
+                </div>
+            ) : (
+                <button
+                    onClick={() => setShowCustomForm(true)}
+                    style={{ marginTop: '4px', padding: '4px 10px', borderRadius: '6px', border: '1px dashed var(--border2)', background: 'transparent', color: 'var(--text-muted)', fontSize: '11px', cursor: 'pointer' }}
+                >
+                    + Tambah Item Custom
+                </button>
+            )}
+        </div>
+    );
+}
+
+export default function SeminarKit({ seminarKitData, onChange, peserta = 30, vip = 0, vvip = 0, guestClass = 'reguler', location = 'jakarta' }) {
+    const [isOpen, setIsOpen] = useState(true);
+    const kota = location.toLowerCase();
 
     const showVIP = vip > 0 || ['vip', 'campuran'].includes(guestClass);
     const showVVIP = vvip > 0 || ['vvip', 'campuran'].includes(guestClass);
 
-    const getDefaultQty = (cls) => {
-        if (cls === 'reguler') return peserta;
-        if (cls === 'vip') return vip;
-        if (cls === 'vvip') return vvip;
-        return 0;
-    };
-
-    const getQty = (kitKey, cls) => {
-        const k = `${kitKey}_${cls}`;
-        return qtys[k] !== undefined ? qtys[k] : getDefaultQty(cls);
-    };
-
-    const setQty = (kitKey, cls, val) => {
-        const k = `${kitKey}_${cls}`;
-        onChange({ ...seminarKitData, qtys: { ...qtys, [k]: Math.max(0, Number(val) || 0) } });
-    };
-
-    const toggleItem = (key) => {
-        const next = selectedItems.includes(key)
-            ? selectedItems.filter(k => k !== key)
-            : [...selectedItems, key];
-        onChange({ ...seminarKitData, items: next });
-    };
-
     const priceFor = (key) => HARGA[key]?.harga?.[kota] || HARGA[key]?.harga?.daerah || 0;
 
-    // Compute subtotal per kit item
-    const calcTotal = (kitKey) => {
-        const price = priceFor(kitKey);
-        let total = price * getQty(kitKey, 'reguler');
-        if (showVIP) total += price * getQty(kitKey, 'vip');
-        if (showVVIP) total += price * getQty(kitKey, 'vvip');
-        return total;
-    };
+    const classes = ['reguler', showVIP && 'vip', showVVIP && 'vvip'].filter(Boolean);
 
-    const grandTotal = selectedItems.reduce((sum, key) => sum + calcTotal(key), 0);
-    const hasActive = selectedItems.length > 0;
+    const getClassData = (cls) => seminarKitData[cls] || { items: [], customItems: [], qty: cls === 'reguler' ? peserta : cls === 'vip' ? vip : vvip };
+
+    const setClassData = (cls, data) => onChange({ ...seminarKitData, [cls]: data });
+
+    const totalItemsActive = classes.reduce((sum, cls) => {
+        const d = getClassData(cls);
+        return sum + (d.items?.length || 0) + (d.customItems?.length || 0);
+    }, 0);
+
+    const grandTotal = classes.reduce((sum, cls) => {
+        const d = getClassData(cls);
+        const qty = d.qty !== undefined ? d.qty : (cls === 'reguler' ? peserta : cls === 'vip' ? vip : vvip);
+        const cat = (d.items || []).reduce((s, k) => s + priceFor(k) * qty, 0);
+        const cust = (d.customItems || []).reduce((s, c) => s + c.harga * qty, 0);
+        return sum + cat + cust;
+    }, 0);
 
     return (
         <div className="card" style={{ marginBottom: '16px' }}>
@@ -69,115 +178,35 @@ export default function SeminarKit({ seminarKitData, onChange, peserta = 30, vip
                 <div>
                     <div className="card-title" style={{ marginBottom: '4px' }}>
                         <span className="icon">🎒</span> Seminar Kit
-                        {hasActive && (
+                        {totalItemsActive > 0 && (
                             <span style={{ marginLeft: '8px', fontSize: '11px', background: 'var(--accent-bg)', color: 'var(--accent)', padding: '2px 8px', borderRadius: '20px', fontWeight: 600 }}>
-                                {selectedItems.length} item aktif
+                                {totalItemsActive} item aktif
                             </span>
                         )}
                     </div>
-                    <p className="card-subtitle">Pilih jenis kit dan sesuaikan qty per kelas tamu undangan.</p>
+                    <p className="card-subtitle">Konfigurasikan seminar kit berbeda untuk setiap kelas tamu.</p>
                 </div>
                 <div style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)', transition: 'transform 0.3s' }}>▼</div>
             </div>
 
             {isOpen && (
                 <div style={{ marginTop: '20px', borderTop: '1px solid var(--border)', paddingTop: '20px' }}>
-                    {KIT_ITEMS.map(({ key, label }) => {
-                        const isSelected = selectedItems.includes(key);
-                        const unitPrice = priceFor(key);
-                        return (
-                            <div key={key} style={{
-                                borderRadius: '10px',
-                                border: `1.5px solid ${isSelected ? 'var(--accent)' : 'var(--border)'}`,
-                                background: isSelected ? 'var(--accent-bg)' : 'var(--surface2)',
-                                marginBottom: '10px',
-                                overflow: 'hidden',
-                                transition: 'all 0.15s'
-                            }}>
-                                {/* Header row */}
-                                <div
-                                    style={{ display: 'flex', alignItems: 'center', gap: '10px', padding: '10px 14px', cursor: 'pointer' }}
-                                    onClick={() => toggleItem(key)}
-                                >
-                                    <div style={{
-                                        width: '18px', height: '18px', borderRadius: '4px', flexShrink: 0,
-                                        border: `2px solid ${isSelected ? 'var(--accent)' : 'var(--border2)'}`,
-                                        background: isSelected ? 'var(--accent)' : 'transparent',
-                                        display: 'flex', alignItems: 'center', justifyContent: 'center',
-                                        color: '#fff', fontSize: '11px', fontWeight: 700
-                                    }}>
-                                        {isSelected ? '✓' : ''}
-                                    </div>
-                                    <span style={{ fontSize: '13px', fontWeight: 500, color: 'var(--text)', flex: 1 }}>{label}</span>
-                                    <span style={{ fontSize: '12px', color: 'var(--text-muted)', whiteSpace: 'nowrap' }}>{fmt(unitPrice)}/pax</span>
-                                </div>
+                    {classes.map((cls, i) => (
+                        <div key={cls}>
+                            {i > 0 && <div style={{ borderTop: '1px solid var(--border)', marginBottom: '16px', marginTop: '4px' }} />}
+                            <ClassKitEditor
+                                cls={cls}
+                                kitData={getClassData(cls)}
+                                onChange={(d) => setClassData(cls, d)}
+                                defaultQty={cls === 'reguler' ? peserta : cls === 'vip' ? vip : vvip}
+                                priceFor={priceFor}
+                            />
+                        </div>
+                    ))}
 
-                                {/* Quantity rows — only if selected */}
-                                {isSelected && (
-                                    <div style={{ padding: '0 14px 12px', display: 'flex', flexWrap: 'wrap', gap: '10px' }}>
-                                        {/* Reguler */}
-                                        <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: '120px' }}>
-                                            <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🟡 Reguler</span>
-                                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                <button className="qty-btn" onClick={() => setQty(key, 'reguler', getQty(key, 'reguler') - 1)}>−</button>
-                                                <input
-                                                    type="number"
-                                                    className="qty-input"
-                                                    value={getQty(key, 'reguler')}
-                                                    onChange={e => setQty(key, 'reguler', e.target.value)}
-                                                />
-                                                <button className="qty-btn" onClick={() => setQty(key, 'reguler', getQty(key, 'reguler') + 1)}>+</button>
-                                            </div>
-                                            <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{fmt(getQty(key, 'reguler') * unitPrice)}</span>
-                                        </div>
-
-                                        {showVIP && (
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: '120px' }}>
-                                                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🔵 VIP</span>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                    <button className="qty-btn" onClick={() => setQty(key, 'vip', getQty(key, 'vip') - 1)}>−</button>
-                                                    <input
-                                                        type="number"
-                                                        className="qty-input"
-                                                        value={getQty(key, 'vip')}
-                                                        onChange={e => setQty(key, 'vip', e.target.value)}
-                                                    />
-                                                    <button className="qty-btn" onClick={() => setQty(key, 'vip', getQty(key, 'vip') + 1)}>+</button>
-                                                </div>
-                                                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{fmt(getQty(key, 'vip') * unitPrice)}</span>
-                                            </div>
-                                        )}
-
-                                        {showVVIP && (
-                                            <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', minWidth: '120px' }}>
-                                                <span style={{ fontSize: '10px', fontWeight: 600, color: 'var(--text-dim)', textTransform: 'uppercase', letterSpacing: '0.5px' }}>🟠 VVIP</span>
-                                                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                                                    <button className="qty-btn" onClick={() => setQty(key, 'vvip', getQty(key, 'vvip') - 1)}>−</button>
-                                                    <input
-                                                        type="number"
-                                                        className="qty-input"
-                                                        value={getQty(key, 'vvip')}
-                                                        onChange={e => setQty(key, 'vvip', e.target.value)}
-                                                    />
-                                                    <button className="qty-btn" onClick={() => setQty(key, 'vvip', getQty(key, 'vvip') + 1)}>+</button>
-                                                </div>
-                                                <span style={{ fontSize: '10px', color: 'var(--text-muted)' }}>{fmt(getQty(key, 'vvip') * unitPrice)}</span>
-                                            </div>
-                                        )}
-
-                                        <div style={{ alignSelf: 'flex-end', marginLeft: 'auto', textAlign: 'right' }}>
-                                            <div style={{ fontSize: '10px', color: 'var(--text-dim)' }}>Subtotal</div>
-                                            <div style={{ fontSize: '13px', fontWeight: 700, color: 'var(--accent)' }}>{fmt(calcTotal(key))}</div>
-                                        </div>
-                                    </div>
-                                )}
-                            </div>
-                        );
-                    })}
-
-                    {hasActive && (
+                    {grandTotal > 0 && (
                         <div style={{ marginTop: '12px', padding: '10px 14px', background: 'var(--gold-bg)', border: '1px solid var(--border2)', borderRadius: '8px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total estimasi seminar kit</span>
+                            <span style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Total estimasi seminar kit (semua kelas)</span>
                             <span style={{ fontSize: '15px', fontWeight: 700, color: 'var(--gold)' }}>{fmt(grandTotal)}</span>
                         </div>
                     )}

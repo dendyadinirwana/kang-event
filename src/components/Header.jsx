@@ -1,4 +1,4 @@
-export default function Header({ activeTab, onTabChange }) {
+export default function Header({ activeTab, onTabChange, hasChecklist = false }) {
     return (
         <header style={{ justifyContent: 'center', flexDirection: 'column', alignItems: 'center' }}>
             <div className="logo-text" style={{ textAlign: 'center', width: '100%' }}>
@@ -13,6 +13,17 @@ export default function Header({ activeTab, onTabChange }) {
                     Simulasi Kegiatan
                 </button>
                 <button
+                    className={`header-tab ${activeTab === 'checklist' ? 'active' : ''}`}
+                    onClick={() => onTabChange('checklist')}
+                    style={{ position: 'relative' }}
+                >
+                    <span className="header-tab-icon">✅</span>
+                    Checklist Persiapan
+                    {hasChecklist && activeTab !== 'checklist' && (
+                        <span style={{ position: 'absolute', top: '6px', right: '6px', width: '7px', height: '7px', borderRadius: '50%', background: '#22c55e' }} />
+                    )}
+                </button>
+                <button
                     className={`header-tab ${activeTab === 'panduan' ? 'active' : ''}`}
                     onClick={() => onTabChange('panduan')}
                 >
@@ -23,3 +34,4 @@ export default function Header({ activeTab, onTabChange }) {
         </header>
     );
 }
+

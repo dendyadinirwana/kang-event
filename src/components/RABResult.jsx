@@ -1,9 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
-// Format Rupiah helper
 const rp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
-export default function RABResult({ result, checklist, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToGuide }) {
+export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToGuide, onNavigateToChecklist }) {
     if (!result) return null;
 
     const { sections, formasi, luasMin, luasIdeal, proyektorJml, micNS, micPes, hari, totalHadir } = result;
@@ -24,14 +23,12 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
         txt += '='.repeat(80) + '\n';
         txt += ['No', 'Uraian', 'Vol', 'Satuan', 'Harga Satuan', 'Total'].join('\t') + '\n';
         txt += '-'.repeat(80) + '\n';
-
         let rowIdx = 1;
         sections.forEach(sec => {
             sec.items.forEach(it => {
                 txt += [rowIdx++, it.nama + (it.note ? ` (${it.note})` : ''), it.qty, it.satuan, rp(it.harga), rp(it.total)].join('\t') + '\n';
             });
         });
-
         txt += '='.repeat(80) + '\n';
         txt += 'GRAND TOTAL\t\t\t\t' + rp(grandTotal) + '\n';
         txt += `Belum termasuk PPN 11% (${rp(ppn)}) • Total+PPN: ${rp(grandTotal + ppn)}\n`;
@@ -81,39 +78,40 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
             <div className="grand-total" style={{ marginTop: '20px' }}>
                 <div className="gt-left">
                     <div className="gt-label">Total Estimasi RAB</div>
-                    <div className="gt-sub" id="gt-sub">Belum termasuk PPN 11% ({rp(ppn)}) • Total+PPN: {rp(grandTotal + ppn)}<br />Referensi: PMK 32/2025 tentang SBM TA 2026 — {kotaLabel}</div>
+                    <div className="gt-sub" id="gt-sub">
+                        Belum termasuk PPN 11% ({rp(ppn)}) • Total+PPN: {rp(grandTotal + ppn)}<br />
+                        Referensi: PMK 32/2025 tentang SBM TA 2026 — {kotaLabel}
+                    </div>
                 </div>
                 <div className="gt-val" id="gt-val">{rp(grandTotal)}</div>
             </div>
 
-            <h3 style={{ fontSize: '15px', marginTop: '36px', marginBottom: '16px' }}>
-                <span className="icon">✅</span> Checklist Persiapan Otomatis
-            </h3>
-
-            <div id="checklist">
-                {checklist.map((group, gIdx) => (
-                    <div className="cl-group" key={gIdx}>
-                        <div className="cl-cat" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                            <span>{group.cat}</span>
-                            {group.guideRef && onNavigateToGuide && (
-                                <button
-                                    className="cl-guide-link"
-                                    onClick={(e) => {
-                                        e.stopPropagation();
-                                        onNavigateToGuide(group.guideRef);
-                                    }}
-                                    title="Lihat panduan terkait"
-                                >
-                                    📖 Lihat Panduan
-                                </button>
-                            )}
+            {/* Checklist CTA banner */}
+            {onNavigateToChecklist && (
+                <div
+                    onClick={onNavigateToChecklist}
+                    style={{
+                        marginTop: '24px', padding: '16px 20px',
+                        background: 'linear-gradient(135deg, rgba(34,197,94,0.08) 0%, rgba(34,197,94,0.03) 100%)',
+                        border: '1.5px solid rgba(34,197,94,0.25)', borderRadius: '12px',
+                        display: 'flex', alignItems: 'center', gap: '12px',
+                        cursor: 'pointer', transition: 'all 0.2s',
+                    }}
+                    onMouseEnter={e => e.currentTarget.style.borderColor = 'rgba(34,197,94,0.5)'}
+                    onMouseLeave={e => e.currentTarget.style.borderColor = 'rgba(34,197,94,0.25)'}
+                >
+                    <span style={{ fontSize: '24px' }}>✅</span>
+                    <div style={{ flex: 1 }}>
+                        <div style={{ fontSize: '14px', fontWeight: 700, color: '#16a34a', marginBottom: '2px' }}>
+                            Checklist Persiapan Otomatis Sudah Siap!
                         </div>
-                        {group.items.map((it, iIdx) => (
-                            <ChecklistItem key={iIdx} text={it} />
-                        ))}
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>
+                            Klik untuk melihat detail checklist lengkap per timeline — H-14, H-7, H-1, Hari H, dan Pasca Acara
+                        </div>
                     </div>
-                ))}
-            </div>
+                    <span style={{ fontSize: '18px', color: '#16a34a' }}>→</span>
+                </div>
+            )}
 
             <div className="claude-btn-container">
                 <button className="claude-btn claude-btn-secondary" onClick={copyRAB}>
@@ -123,10 +121,9 @@ export default function RABResult({ result, checklist, eventName, kotaLabel, eve
                     <span style={{ fontSize: '16px' }}>🔄</span> Reset Data
                 </button>
                 <button className="claude-btn claude-btn-primary" onClick={() => window.print()}>
-                    <span style={{ fontSize: '16px' }}>🖨️</span> Save as PDF
+                    <span style={{ fontSize: '16px' }}>🖨️</span> Save as PDF (RAB)
                 </button>
             </div>
-
         </div>
     );
 }
@@ -176,35 +173,6 @@ function RABSection({ section }) {
                         </tfoot>
                     </table>
                 </div>
-            </div>
-        </div>
-    );
-}
-
-function ChecklistItem({ text }) {
-    const [done, setDone] = useState(false);
-
-    return (
-        <div className={`cl-item ${done ? 'done' : ''}`} onClick={() => setDone(!done)} style={{ cursor: 'pointer' }}>
-            <div className="cl-check"></div>
-            <div className="cl-text">{text}</div>
-            <div className="cl-pic-wrap">
-                <span className="cl-pic-label" style={{ fontSize: '10px', color: 'var(--text-muted)' }}>PIC:</span>
-                <input
-                    className="cl-pic-input"
-                    type="text"
-                    placeholder="Nama PIC..."
-                    onClick={(e) => e.stopPropagation()}
-                    style={{
-                        border: 'none',
-                        background: 'transparent',
-                        borderBottom: '1px dashed var(--border)',
-                        outline: 'none',
-                        fontSize: '11px',
-                        marginLeft: '4px',
-                        width: '80px'
-                    }}
-                />
             </div>
         </div>
     );

@@ -70,7 +70,7 @@ export const HARGA = {
 
 export const OVERRIDE_ITEMS = [
     // Honorarium (SBM-regulated)
-    { key: 'narasumber_honor', label: 'Honor Narasumber (per OJ = 60 menit)', section: '👤 Honorarium — SBM TA 2026 (PMK 32/2025)' },
+    { key: 'narasumber_honor', label: 'Honor Narasumber (per OJ = 60 menit)', section: '👤 Honorarium' },
     { key: 'moderator_honor', label: 'Honor Moderator (per kegiatan)', section: null },
     { key: 'mc_honor', label: 'Honor MC / Pembawa Acara (per kegiatan)', section: null },
     { key: 'panitia_honor', label: 'Honor Panitia (per kegiatan)', section: null },
@@ -80,7 +80,7 @@ export const OVERRIDE_ITEMS = [
     { key: 'interpreter_honor', label: 'Honor Interpreter (per orang/hari)', section: null },
     { key: 'notulen_honor', label: 'Honor Notulen (per kegiatan)', section: null },
     // Konsumsi (SBM-regulated)
-    { key: 'snack', label: 'Kudapan / Coffee Break (per orang/rapat)', section: '☕ Konsumsi — SBM TA 2026 (PMK 32/2025)' },
+    { key: 'snack', label: 'Kudapan / Coffee Break (per orang/rapat)', section: '☕ Konsumsi' },
     { key: 'makan_siang', label: 'Makan Siang (per orang/rapat)', section: null },
     { key: 'makan_vip', label: 'Makan VIP/Pejabat (per orang/rapat)', section: null },
     // Venue & AV (harga pasar)
@@ -271,30 +271,31 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     if (['seminar', 'workshop', 'konferensi', 'fgd'].includes(evType) && totalPeserta > 0) materi.push(row('modul', kota, totalPeserta, overrides));
     if (['seminar', 'workshop', 'konferensi'].includes(evType) && totalPeserta > 0) materi.push(row('sertifikat', kota, totalPeserta, overrides));
     if (hasVVIP || hasVIP || isGala) materi.push(row('souvenir', kota, (vvip + vip) || 10, overrides));
-    // Seminar Kit — dari komponen SeminarKit (per kelas tamu)
-    if (seminarKitData?.items?.length > 0) {
-        const kitItems = seminarKitData.items;
-        const qtys = seminarKitData.qtys || {};
-        kitItems.forEach(kitKey => {
+    // Seminar Kit — per-class model (reguler / vip / vvip)
+    const clsMap = [
+        { cls: 'reguler', active: true },
+        { cls: 'vip', active: hasVIP },
+        { cls: 'vvip', active: hasVVIP },
+    ];
+    clsMap.forEach(({ cls, active }) => {
+        if (!active) return;
+        const clsData = seminarKitData?.[cls];
+        if (!clsData) return;
+        const qty = clsData.qty !== undefined ? clsData.qty : (cls === 'reguler' ? peserta : cls === 'vip' ? vip : vvip);
+        if (qty <= 0) return;
+        const clsLabel = cls === 'reguler' ? 'Reguler' : cls === 'vip' ? 'VIP' : 'VVIP';
+        const note = `${qty} pax kelas ${clsLabel}`;
+        // Catalog items
+        (clsData.items || []).forEach(kitKey => {
             const kitHarga = h(kota, kitKey, overrides);
             if (!HARGA[kitKey]) return;
-            const getQty = (cls) => {
-                const k = `${kitKey}_${cls}`;
-                const fallback = cls === 'reguler' ? peserta : cls === 'vip' ? vip : vvip;
-                return qtys[k] !== undefined ? qtys[k] : fallback;
-            };
-            const qtyReg = getQty('reguler');
-            const qtyVip = hasVIP ? getQty('vip') : 0;
-            const qtyVvip = hasVVIP ? getQty('vvip') : 0;
-            const qtyTotal = qtyReg + qtyVip + qtyVvip;
-            if (qtyTotal > 0) {
-                const noteParts = [`${qtyReg} reguler`];
-                if (qtyVip > 0) noteParts.push(`${qtyVip} VIP`);
-                if (qtyVvip > 0) noteParts.push(`${qtyVvip} VVIP`);
-                materi.push({ key: kitKey, nama: HARGA[kitKey].nama, qty: qtyTotal, satuan: HARGA[kitKey].sat, harga: kitHarga, total: kitHarga * qtyTotal, note: noteParts.join(' + ') });
-            }
+            materi.push({ key: kitKey, nama: HARGA[kitKey].nama + ` (${clsLabel})`, qty, satuan: HARGA[kitKey].sat, harga: kitHarga, total: kitHarga * qty, note });
         });
-    }
+        // Custom items
+        (clsData.customItems || []).forEach(c => {
+            materi.push({ key: `custom_${c.id}`, nama: `${c.name} (${clsLabel})`, qty, satuan: 'pax', harga: c.harga, total: c.harga * qty, note });
+        });
+    });
     sections.push({ label: '📄 Materi & Perlengkapan Peserta', items: materi.filter(Boolean) });
 
     const logistik = [];

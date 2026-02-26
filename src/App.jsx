@@ -7,6 +7,7 @@ import SupportTeam from './components/SupportTeam';
 import Decorations from './components/Decorations';
 import SeminarKit from './components/SeminarKit';
 import RABResult from './components/RABResult';
+import ChecklistPage from './components/ChecklistPage';
 import Disclaimer from './components/Disclaimer';
 import PriceOverrides from './components/PriceOverrides';
 import GuidePage from './components/GuidePage';
@@ -44,7 +45,8 @@ export default function App() {
   const [activeTab, setActiveTab] = useState('simulasi');
   const [guideOpenSection, setGuideOpenSection] = useState(null);
   const [errorMsg, setErrorMsg] = useState(null);
-  const [seminarKitData, setSeminarKitData] = useState({ enabled: false, items: [], qtys: {} });
+  const [seminarKitData, setSeminarKitData] = useState({ reguler: null, vip: null, vvip: null });
+  const [lastInputData, setLastInputData] = useState(null);
 
   const resultRef = useRef(null);
 
@@ -110,6 +112,7 @@ export default function App() {
 
     setResult(calculatedResult);
     setChecklist(generatedChecklist);
+    setLastInputData(inputData);
 
     // Slight delay to allow render before smooth scrolling
     setTimeout(() => {
@@ -135,9 +138,16 @@ export default function App() {
   return (
     <>
       <ThemeToggle />
-      <Layout activeTab={activeTab} onTabChange={setActiveTab}>
+      <Layout activeTab={activeTab} onTabChange={setActiveTab} hasChecklist={checklist.length > 0}>
         {activeTab === 'panduan' ? (
           <GuidePage initialOpenSection={guideOpenSection} onSectionOpened={() => setGuideOpenSection(null)} />
+        ) : activeTab === 'checklist' ? (
+          <ChecklistPage
+            checklist={checklist}
+            inputData={lastInputData}
+            eventName={finalEventName}
+            kotaLabel={kotaLabel}
+          />
         ) : (
           <>
             <EventDetails
@@ -205,7 +215,6 @@ export default function App() {
               {result && (
                 <RABResult
                   result={result}
-                  checklist={checklist}
                   eventName={finalEventName}
                   kotaLabel={kotaLabel}
                   eventTypeLabel={evLabels[eventData.eventType]}
@@ -213,6 +222,10 @@ export default function App() {
                   onNavigateToGuide={(sectionId) => {
                     setGuideOpenSection(sectionId);
                     setActiveTab('panduan');
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  onNavigateToChecklist={() => {
+                    setActiveTab('checklist');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                 />

@@ -2292,6 +2292,83 @@
       background: var(--surface2);
     }
 
+    /* ========== ERROR TOAST ========== */
+    .error-toast {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 16px;
+      background: rgba(220, 38, 38, 0.08);
+      border: 1px solid rgba(220, 38, 38, 0.3);
+      border-radius: 10px;
+      color: #dc2626;
+      font-size: 13px;
+      font-weight: 500;
+      animation: slideInDown 0.25s ease;
+      margin-bottom: 10px;
+    }
+
+    [data-theme="dark"] .error-toast {
+      background: rgba(239, 68, 68, 0.1);
+      border-color: rgba(239, 68, 68, 0.25);
+      color: #f87171;
+    }
+
+    @keyframes slideInDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    /* ========== QTY CONTROLS (SeminarKit) ========== */
+    .qty-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      border: 1.5px solid var(--border2);
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      padding: 0;
+      transition: background 0.15s, border-color 0.15s;
+    }
+
+    .qty-btn:hover {
+      background: var(--accent-bg);
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+
+    .qty-input {
+      width: 52px;
+      height: 28px;
+      text-align: center;
+      border: 1.5px solid var(--border2);
+      border-radius: 6px;
+      background: var(--surface);
+      color: var(--text);
+      font-size: 13px;
+      padding: 0 4px;
+    }
+
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+
     @media print {
       .theme-toggle-fixed {
         display: none !important;

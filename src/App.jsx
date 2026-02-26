@@ -1,10 +1,11 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import Layout from './components/Layout';
 import EventDetails from './components/EventDetails';
 import GuestClass from './components/GuestClass';
 import TeamCounters from './components/TeamCounters';
 import SupportTeam from './components/SupportTeam';
 import Decorations from './components/Decorations';
+import SeminarKit from './components/SeminarKit';
 import RABResult from './components/RABResult';
 import Disclaimer from './components/Disclaimer';
 import PriceOverrides from './components/PriceOverrides';
@@ -42,6 +43,8 @@ export default function App() {
   const [overrides, setOverrides] = useState({});
   const [activeTab, setActiveTab] = useState('simulasi');
   const [guideOpenSection, setGuideOpenSection] = useState(null);
+  const [errorMsg, setErrorMsg] = useState(null);
+  const [seminarKitData, setSeminarKitData] = useState({ enabled: false, items: [], qtys: {} });
 
   const resultRef = useRef(null);
 
@@ -55,6 +58,11 @@ export default function App() {
 
   const handleTeamCountChange = (key, value) => {
     setTeamCounts(prev => ({ ...prev, [key]: value }));
+  };
+
+  const setError = (msg) => {
+    setErrorMsg(msg);
+    setTimeout(() => setErrorMsg(null), 4000);
   };
 
   const handleOverrideChange = (key, value) => {
@@ -71,20 +79,19 @@ export default function App() {
 
   const generateRAB = () => {
     if (!eventData.eventType) {
-      alert('Pilih jenis acara dulu ya!');
+      setError('Pilih jenis acara dulu ya!');
       return;
     }
-
     if (guestClass === 'vvip' && guestCounts.vvip === 0) {
-      alert('Jumlah tamu VVIP harus diisi minimal 1 orang!');
+      setError('Jumlah tamu VVIP harus diisi minimal 1 orang!');
       return;
     }
     if (guestClass === 'vip' && guestCounts.vip === 0) {
-      alert('Jumlah tamu VIP harus diisi minimal 1 orang!');
+      setError('Jumlah tamu VIP harus diisi minimal 1 orang!');
       return;
     }
     if (guestClass === 'campuran' && guestCounts.vvip === 0 && guestCounts.vip === 0) {
-      alert('Untuk kelas Campuran, isi minimal jumlah VVIP atau VIP!');
+      setError('Untuk kelas Campuran, isi minimal jumlah VVIP atau VIP!');
       return;
     }
 
@@ -98,7 +105,7 @@ export default function App() {
       decorChips: decorations
     };
 
-    const calculatedResult = buildRAB(inputData, overrides);
+    const calculatedResult = buildRAB(inputData, overrides, seminarKitData);
     const generatedChecklist = buildChecklist(inputData, calculatedResult.formasi);
 
     setResult(calculatedResult);
@@ -162,6 +169,16 @@ export default function App() {
               onChangeDecor={setDecorations}
             />
 
+            <SeminarKit
+              seminarKitData={seminarKitData}
+              onChange={setSeminarKitData}
+              peserta={teamCounts.peserta}
+              vip={guestCounts.vip}
+              vvip={guestCounts.vvip}
+              guestClass={guestClass}
+              location={eventData.location}
+            />
+
             <PriceOverrides
               overrides={overrides}
               onChangeOverride={handleOverrideChange}
@@ -171,6 +188,12 @@ export default function App() {
             <Disclaimer />
 
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '16px' }}>
+              {errorMsg && (
+                <div className="error-toast" style={{ marginBottom: '10px', width: '100%' }}>
+                  ⚠️ {errorMsg}
+                  <button onClick={() => setErrorMsg(null)} style={{ marginLeft: 'auto', background: 'none', border: 'none', cursor: 'pointer', color: 'inherit', fontSize: '16px' }}>×</button>
+                </div>
+              )}
               <button className="claude-btn claude-btn-primary" onClick={generateRAB} style={{ padding: '14px 24px', fontSize: '15px' }}>
                 <span style={{ fontSize: '18px' }}>✨</span> Simulasikan Kegiatan
               </button>

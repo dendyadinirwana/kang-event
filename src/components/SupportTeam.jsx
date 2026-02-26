@@ -10,7 +10,6 @@ export default function SupportTeam({ selectedSupport, onChangeSupport }) {
         { value: 'notulen', label: '📝 Notulen' },
         { value: 'registrasi', label: '🪪 Meja Registrasi' },
         { value: 'konsumsi', label: '☕ Konsumsi' },
-        { value: 'seminar_kit', label: '🎒 Seminar Kit' },
         { value: 'keamanan', label: '🛡️ Keamanan / Satpam' },
         { value: 'penerima_tamu', label: '🤝 Penerima Tamu' },
         { value: 'humas', label: '📢 Humas / Publikasi' },

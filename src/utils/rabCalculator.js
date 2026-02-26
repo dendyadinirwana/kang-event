@@ -64,8 +64,8 @@ export const HARGA = {
 
     // Venue & Logistik
     sewa_ruang: { nama: 'Sewa Ruang / Ballroom', sat: 'hari', harga: { jakarta: 15000000, bandung: 10000000, surabaya: 12000000, yogyakarta: 8000000, medan: 10000000, makassar: 10000000, daerah: 7000000 } },
-    transportasi: { nama: 'Transport / Koordinasi Lapangan', sat: 'paket', harga: { jakarta: 1500000, bandung: 1200000, surabaya: 1350000, yogyakarta: 1100000, medan: 1200000, makassar: 1200000, daerah: 1000000 } },
-    dokumentasi_edit: { nama: 'Editing Dokumentasi Foto/Video', sat: 'paket', harga: { jakarta: 2500000, bandung: 2000000, surabaya: 2200000, yogyakarta: 1800000, medan: 2000000, makassar: 2000000, daerah: 1500000 } },
+    transportasi: { nama: 'Transport Koordinasi Panitia & Vendor (PP)', sat: 'paket', harga: { jakarta: 1500000, bandung: 1200000, surabaya: 1350000, yogyakarta: 1100000, medan: 1200000, makassar: 1200000, daerah: 1000000 } },
+    dokumentasi_edit: { nama: 'Editing & Produksi Dokumentasi Foto/Video', sat: 'paket', harga: { jakarta: 2500000, bandung: 2000000, surabaya: 2200000, yogyakarta: 1800000, medan: 2000000, makassar: 2000000, daerah: 1500000 } },
 };
 
 export const OVERRIDE_ITEMS = [
@@ -96,6 +96,12 @@ export const OVERRIDE_ITEMS = [
     { key: 'backdrop', label: 'Backdrop/Spanduk (per m²)', section: '🌸 Dekorasi (harga pasar)' },
     { key: 'standing_flower', label: 'Standing Flower (per rangkaian)', section: null },
     { key: 'table_flower', label: 'Bunga Meja (per rangkaian)', section: null },
+    // Materi Peserta
+    { key: 'nametag', label: 'Name Tag + Holder (per pcs)', section: '📄 Materi & Perlengkapan Peserta' },
+    { key: 'atk', label: 'ATK Peserta (per set/orang)', section: null },
+    { key: 'modul', label: 'Modul / Materi Cetak (per eks)', section: null },
+    { key: 'sertifikat', label: 'Sertifikat Cetak (per eks)', section: null },
+    { key: 'souvenir', label: 'Souvenir / Goodie Bag (per pcs)', section: null },
     // Seminar Kit
     { key: 'seminar_kit', label: 'Seminar Kit (per orang)', section: '🎒 Seminar Kit' },
     { key: 'lanyard', label: 'Lanyard + ID Card Holder (per pcs)', section: null },
@@ -104,6 +110,10 @@ export const OVERRIDE_ITEMS = [
     { key: 'desain_vbg', label: 'Desain Virtual Background Zoom', section: '🎨 Desain & Branding Digital' },
     { key: 'thumbnail_yt', label: 'Desain YouTube Thumbnail', section: null },
     { key: 'video_bumper', label: 'Produksi Video Bumper / Opening Acara', section: null },
+    // Logistik
+    { key: 'air_mineral', label: 'Air Mineral (per paket/hari)', section: '🚛 Logistik & Pasca-Acara' },
+    { key: 'transportasi', label: 'Transport Koordinasi Panitia & Vendor (per paket)', section: null },
+    { key: 'dokumentasi_edit', label: 'Editing & Produksi Dokumentasi Foto/Video', section: null },
 ];
 
 function h(kota, key, overrides) {
@@ -120,7 +130,7 @@ function row(key, kota, qty, overrides, sat_override = null, note = '') {
     return { key, nama: item.nama, qty, satuan, harga, total, note };
 }
 
-export function buildRAB(input, overrides = {}) {
+export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     const {
         location: kota = 'jakarta',
         eventType: evType = 'seminar',
@@ -261,20 +271,36 @@ export function buildRAB(input, overrides = {}) {
     if (['seminar', 'workshop', 'konferensi', 'fgd'].includes(evType) && totalPeserta > 0) materi.push(row('modul', kota, totalPeserta, overrides));
     if (['seminar', 'workshop', 'konferensi'].includes(evType) && totalPeserta > 0) materi.push(row('sertifikat', kota, totalPeserta, overrides));
     if (hasVVIP || hasVIP || isGala) materi.push(row('souvenir', kota, (vvip + vip) || 10, overrides));
-    // Seminar Kit — jika dipilih di Tim Pendukung
-    if (team.includes('seminar_kit') && totalPeserta > 0) {
-        materi.push({ ...row('seminar_kit', kota, totalPeserta, overrides, 'set/orang'), note: `${totalPeserta} peserta` });
-        materi.push({ ...row('lanyard', kota, totalHadir, overrides, 'pcs'), note: `${totalHadir} orang (peserta + panitia + narasumber)` });
-        if (['seminar', 'workshop', 'konferensi'].includes(evType)) {
-            materi.push({ ...row('flashdisk_materi', kota, totalPeserta, overrides, 'pcs'), note: `${totalPeserta} peserta` });
-        }
+    // Seminar Kit — dari komponen SeminarKit (per kelas tamu)
+    if (seminarKitData?.items?.length > 0) {
+        const kitItems = seminarKitData.items;
+        const qtys = seminarKitData.qtys || {};
+        kitItems.forEach(kitKey => {
+            const kitHarga = h(kota, kitKey, overrides);
+            if (!HARGA[kitKey]) return;
+            const getQty = (cls) => {
+                const k = `${kitKey}_${cls}`;
+                const fallback = cls === 'reguler' ? peserta : cls === 'vip' ? vip : vvip;
+                return qtys[k] !== undefined ? qtys[k] : fallback;
+            };
+            const qtyReg = getQty('reguler');
+            const qtyVip = hasVIP ? getQty('vip') : 0;
+            const qtyVvip = hasVVIP ? getQty('vvip') : 0;
+            const qtyTotal = qtyReg + qtyVip + qtyVvip;
+            if (qtyTotal > 0) {
+                const noteParts = [`${qtyReg} reguler`];
+                if (qtyVip > 0) noteParts.push(`${qtyVip} VIP`);
+                if (qtyVvip > 0) noteParts.push(`${qtyVvip} VVIP`);
+                materi.push({ key: kitKey, nama: HARGA[kitKey].nama, qty: qtyTotal, satuan: HARGA[kitKey].sat, harga: kitHarga, total: kitHarga * qtyTotal, note: noteParts.join(' + ') });
+            }
+        });
     }
     sections.push({ label: '📄 Materi & Perlengkapan Peserta', items: materi.filter(Boolean) });
 
     const logistik = [];
-    logistik.push(row('transportasi', kota, 1, overrides, 'paket'));
+    logistik.push({ ...row('transportasi', kota, 1, overrides, 'paket'), note: 'transport narasumber lokal, liaison vendor AV & koordinasi lapangan' });
     if (team.includes('fotografer') || team.includes('videografer')) logistik.push(row('dokumentasi_edit', kota, 1, overrides, 'paket'));
-    sections.push({ label: '🚛 Transportasi & Logistik', items: logistik });
+    sections.push({ label: '🚛 Logistik & Pasca-Acara', items: logistik });
 
     // Desain & Branding Digital — muncul jika webinar/live streaming/videografer
     const isWebinar = evType === 'webinar';

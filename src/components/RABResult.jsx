@@ -191,7 +191,8 @@ function RABSection({ section, onRemoveItem }) {
                                 <th style={{ width: '10%' }}>Vol</th>
                                 <th style={{ width: '16%' }}>Satuan</th>
                                 <th style={{ width: '22%' }}>Harga Satuan</th>
-                                <th style={{ width: '24%' }}>Total</th>
+                                <th style={{ width: '20%' }}>Total</th>
+                                <th style={{ width: '4%' }}></th>
                             </tr>
                         </thead>
                         <tbody>
@@ -204,8 +205,8 @@ function RABSection({ section, onRemoveItem }) {
                                     <td className="td-num">{it.qty}</td>
                                     <td className="td-sat">{it.satuan}</td>
                                     <td className="td-harga">{rp(it.harga)}</td>
-                                    <td style={{ position: 'relative' }}>
-                                        {rp(it.total)}
+                                    <td className="td-harga">{rp(it.total)}</td>
+                                    <td className="td-action">
                                         <button
                                             className="del-btn"
                                             onClick={() => onRemoveItem && onRemoveItem(it.key)}
@@ -221,7 +222,7 @@ function RABSection({ section, onRemoveItem }) {
                         <tfoot>
                             <tr>
                                 <td colSpan="4">Subtotal {section.label}</td>
-                                <td>{rp(secTotal)}</td>
+                                <td colSpan="2">{rp(secTotal)}</td>
                             </tr>
                         </tfoot>
                     </table>

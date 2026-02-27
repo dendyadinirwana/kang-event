@@ -794,8 +794,6 @@
     .table-responsive {
       width: 100%;
       overflow-x: auto;
-      padding-right: 48px;
-      /* space for the absolutely positioned delete button */
       -webkit-overflow-scrolling: touch;
     }
 
@@ -856,18 +854,19 @@
     /* RAB TABLE ROW HOVER & DELETE BTN */
     .rab-row {
       transition: background-color 0.15s ease;
-      position: relative;
     }
 
     .rab-row:hover {
       background-color: var(--surface2);
     }
 
+    .td-action {
+      text-align: center !important;
+      vertical-align: middle;
+      padding: 0 4px !important;
+    }
+
     .del-btn {
-      position: absolute;
-      right: -34px;
-      top: 50%;
-      transform: translateY(-50%);
       background: #fff;
       border: 1px solid var(--border);
       font-size: 14px;
@@ -878,11 +877,10 @@
       transition: all 0.2s ease;
       padding: 6px;
       border-radius: 6px;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-      z-index: 10;
     }
 
     .rab-row:hover .del-btn {
@@ -895,7 +893,7 @@
       /* red-50 */
       border-color: #fca5a5;
       /* red-300 */
-      transform: translateY(-50%) scale(1.1);
+      transform: scale(1.1);
     }
 
     @media (max-width: 768px) {

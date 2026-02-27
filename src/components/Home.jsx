@@ -223,6 +223,11 @@ export default function Home() {
                         overrides={overrides}
                         onChangeOverride={handleOverrideChange}
                         kotaLabel={kotaLabel}
+                        seminarKitData={seminarKitData}
+                        peserta={teamCounts.peserta}
+                        vip={guestCounts.vip}
+                        vvip={guestCounts.vvip}
+                        guestClass={guestClass}
                     />
 
                     <Disclaimer />

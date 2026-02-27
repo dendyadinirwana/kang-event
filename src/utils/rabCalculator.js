@@ -106,10 +106,6 @@ export const OVERRIDE_ITEMS = [
     { key: 'modul', label: 'Modul / Materi Cetak (per eks)', section: null },
     { key: 'sertifikat', label: 'Sertifikat Cetak (per eks)', section: null },
     { key: 'souvenir', label: 'Souvenir / Goodie Bag (per pcs)', section: null },
-    // Seminar Kit
-    { key: 'seminar_kit', label: 'Seminar Kit (per orang)', section: '🎒 Seminar Kit' },
-    { key: 'lanyard', label: 'Lanyard + ID Card Holder (per pcs)', section: null },
-    { key: 'flashdisk_materi', label: 'Flashdisk Materi 4GB (per pcs)', section: null },
     // Desain Digital
     { key: 'desain_vbg', label: 'Desain Virtual Background Zoom', section: '🎨 Desain & Branding Digital' },
     { key: 'thumbnail_yt', label: 'Desain YouTube Thumbnail', section: null },

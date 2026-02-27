@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { HARGA } from '../utils/rabCalculator';
 
-const KIT_CATALOG = [
+export const KIT_CATALOG = [
     { key: 'seminar_kit', label: '🎒 Tas / Tote Bag + Blocknote + Pulpen' },
     { key: 'lanyard', label: '🔖 Lanyard + ID Card Holder' },
     { key: 'flashdisk_materi', label: '💾 Flashdisk Materi (4GB)' },

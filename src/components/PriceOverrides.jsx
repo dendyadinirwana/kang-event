@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { OVERRIDE_ITEMS, HARGA } from '../utils/rabCalculator';
+import { KIT_CATALOG } from './SeminarKit';
 
 const MAX_PRICE = 1_000_000_000; // 1 billion IDR
 
@@ -13,7 +14,16 @@ function normalizeCityKey(kotaLabel) {
     return 'daerah';
 }
 
-export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel = 'jakarta' }) {
+export default function PriceOverrides({
+    overrides,
+    onChangeOverride,
+    kotaLabel = 'jakarta',
+    seminarKitData = {},
+    peserta = 30,
+    vip = 0,
+    vvip = 0,
+    guestClass = 'reguler'
+}) {
     const [isOpen, setIsOpen] = useState(false);
     const cityKey = normalizeCityKey(kotaLabel);
 
@@ -30,6 +40,50 @@ export default function PriceOverrides({ overrides, onChangeOverride, kotaLabel 
             currentSection.items.push(item);
         }
     });
+
+    // Determine active seminar kit items
+    const activeKitKeys = new Set();
+    const showVIP = vip > 0 || ['vip', 'campuran'].includes(guestClass);
+    const showVVIP = vvip > 0 || ['vvip', 'campuran'].includes(guestClass);
+
+    const classes = [
+        { cls: 'reguler', active: true, qty: peserta },
+        { cls: 'vip', active: showVIP, qty: vip },
+        { cls: 'vvip', active: showVVIP, qty: vvip },
+    ];
+
+    classes.forEach(({ cls, active, qty }) => {
+        if (!active) return;
+        const d = seminarKitData[cls];
+        const finalQty = d?.qty !== undefined ? d.qty : qty;
+        if (finalQty > 0) {
+            (d?.items || []).forEach(k => activeKitKeys.add(k));
+        }
+    });
+
+    // Remove duplicates from standard catalog if they are already in the Seminar Kit
+    if (activeKitKeys.size > 0) {
+        groupedItems.forEach(group => {
+            group.items = group.items.filter(item => !activeKitKeys.has(item.key));
+        });
+
+        // Add dynamic Seminar Kit section
+        const kitItemsList = Array.from(activeKitKeys).map(key => {
+            const catalogMatch = KIT_CATALOG.find(k => k.key === key);
+            return {
+                key,
+                label: catalogMatch ? catalogMatch.label.replace(/^[^\s]+\s/, '') + ' (per pax)' : (HARGA[key]?.nama || key) + ' (per pax)',
+                section: '🎒 Seminar Kit'
+            };
+        });
+
+        if (kitItemsList.length > 0) {
+            groupedItems.push({
+                label: '🎒 Seminar Kit',
+                items: kitItemsList
+            });
+        }
+    }
 
     const formatRupiah = (angka) => {
         return new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', minimumFractionDigits: 0 }).format(angka);

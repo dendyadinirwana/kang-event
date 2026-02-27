@@ -6,6 +6,15 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.6.3] - 2026-02-27
+
+### Changed
+- **Page Layout Architecture**: Menyeragamkan kerangka tata letak halaman `Home`, `Feedback`, dan `About` menggunakan komponen `Layout.jsx` tunggal.
+- **Top Navigation UX**: Menambahkan visualisasi judul dan subjudul statis secara dinamis untuk setiap halaman di dalam komponen Layout.
+- **Header Navigation Fix**: Memperbaiki issue styling CSS `.wrapper` di mana judul halaman tertutup oleh navigasi sticky di atas layar.
+
+---
+
 ## [0.6.2] - 2026-02-27
 
 ### Added

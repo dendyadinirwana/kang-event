@@ -89,13 +89,7 @@
       min-height: 100vh;
     }
 
-    .wrapper {
-      width: 100%;
-      max-width: 680px;
-      margin: 0 auto;
-      padding: 36px 20px 60px;
-      flex: 1;
-    }
+
 
     .app-container {
       display: flex;
@@ -160,15 +154,7 @@
       box-shadow: none;
     }
 
-    /* Top padding for the page content so it clears the fixed header */
-    .app-container>.app-header-wrapper+* {
-      padding-top: 80px;
-    }
 
-    /* Compensate for fixed header: wrapper needs pt */
-    .wrapper {
-      padding-top: 20px !important;
-    }
 
     .header-left {
       display: flex;
@@ -231,7 +217,8 @@
       width: 100%;
       max-width: 680px;
       margin: 0 auto;
-      padding: 36px 20px 60px;
+      padding: 110px 20px 60px;
+      /* 110px to clear fixed header appropriately */
       flex: 1;
     }
 
@@ -1662,7 +1649,7 @@
       }
 
       .wrapper {
-        padding: 16px 14px 40px;
+        padding: 110px 14px 40px;
       }
 
       .card {

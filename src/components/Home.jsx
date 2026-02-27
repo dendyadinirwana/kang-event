@@ -153,7 +153,13 @@ export default function Home() {
     const finalEventName = eventData.eventName || evLabels[eventData.eventType];
 
     return (
-        <Layout activeTab={activeTab} onTabChange={setActiveTab} hasChecklist={checklist.length > 0}>
+        <Layout
+            activeTab={activeTab}
+            onTabChange={setActiveTab}
+            hasChecklist={checklist.length > 0}
+            title="Simulasi Kegiatan &amp; Perlengkapan Acara"
+            showTabs={true}
+        >
             {activeTab === 'panduan' ? (
                 <GuidePage
                     initialOpenSection={guideOpenSection}

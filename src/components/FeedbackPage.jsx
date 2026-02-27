@@ -1,4 +1,5 @@
 import { useState, useRef } from 'react';
+import Layout from './Layout';
 
 const STATUS = { idle: 'idle', loading: 'loading', success: 'success', error: 'error', cooldown: 'cooldown' };
 
@@ -72,14 +73,10 @@ export default function FeedbackPage() {
     };
 
     return (
-        <div className="page-outer">
-            {/* Hero */}
-            <div className="page-hero">
-                <h1 className="app-title">Beri Kami Masukan</h1>
-                <p className="page-hero-sub">
-                    Kritik, saran, atau laporan bug sangat kami hargai untuk meningkatkan kualitas aplikasi.
-                </p>
-            </div>
+        <Layout
+            title="Beri Kami Masukan"
+            subtitle="Kritik, saran, atau laporan bug sangat kami hargai untuk meningkatkan kualitas aplikasi."
+        >
 
             <div className="feedback-body">
                 {/* Info Pills */}
@@ -182,6 +179,6 @@ export default function FeedbackPage() {
                     )}
                 </div>
             </div>
-        </div>
+        </Layout>
     );
 }

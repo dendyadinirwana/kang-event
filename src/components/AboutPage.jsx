@@ -12,17 +12,14 @@ const FEATURES = [
     { icon: '📖', title: 'Panduan Kegiatan', desc: 'Langkah-langkah operasional acara yang berubah mengikuti konfigurasi peserta dan tim.' },
 ];
 
+import Layout from './Layout';
+
 export default function AboutPage() {
     return (
-        <div className="page-outer">
-            {/* Hero */}
-            <div className="page-hero">
-                <h1 className="app-title">Tentang Aplikasi</h1>
-                <p className="page-hero-sub">
-                    Sistem perencanaan dan simulasi acara yang dirancang khusus untuk kebutuhan kegiatan pemerintahan — dari rapat koordinasi hingga seminar nasional.
-                </p>
-            </div>
-
+        <Layout
+            title="Tentang Aplikasi"
+            subtitle="Sistem perencanaan dan simulasi acara yang dirancang khusus untuk kebutuhan kegiatan pemerintahan — dari rapat koordinasi hingga seminar nasional."
+        >
             {/* Stats Row */}
             <div className="about-stats-row">
                 {STATS.map((s) => (
@@ -62,6 +59,6 @@ export default function AboutPage() {
                     </div>
                 </div>
             </div>
-        </div>
+        </Layout>
     );
 }

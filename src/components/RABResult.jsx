@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Trash2 } from 'lucide-react';
 
 const rp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
@@ -188,10 +189,9 @@ function RABSection({ section, onRemoveItem }) {
                             <tr>
                                 <th style={{ width: '28%' }}>Uraian</th>
                                 <th style={{ width: '10%' }}>Vol</th>
-                                <th style={{ width: '15%' }}>Satuan</th>
-                                <th style={{ width: '21%' }}>Harga Satuan</th>
-                                <th style={{ width: '22%' }}>Total</th>
-                                <th style={{ width: '4%' }}></th>
+                                <th style={{ width: '16%' }}>Satuan</th>
+                                <th style={{ width: '22%' }}>Harga Satuan</th>
+                                <th style={{ width: '24%' }}>Total</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -204,15 +204,15 @@ function RABSection({ section, onRemoveItem }) {
                                     <td className="td-num">{it.qty}</td>
                                     <td className="td-sat">{it.satuan}</td>
                                     <td className="td-harga">{rp(it.harga)}</td>
-                                    <td>{rp(it.total)}</td>
-                                    <td className="td-del">
+                                    <td style={{ position: 'relative' }}>
+                                        {rp(it.total)}
                                         <button
                                             className="del-btn"
                                             onClick={() => onRemoveItem && onRemoveItem(it.key)}
                                             title="Hapus item ini dari RAB"
                                             aria-label={`Hapus ${it.nama}`}
                                         >
-                                            🗑️
+                                            <Trash2 size={16} strokeWidth={2} />
                                         </button>
                                     </td>
                                 </tr>
@@ -221,7 +221,7 @@ function RABSection({ section, onRemoveItem }) {
                         <tfoot>
                             <tr>
                                 <td colSpan="4">Subtotal {section.label}</td>
-                                <td colSpan="2">{rp(secTotal)}</td>
+                                <td>{rp(secTotal)}</td>
                             </tr>
                         </tfoot>
                     </table>

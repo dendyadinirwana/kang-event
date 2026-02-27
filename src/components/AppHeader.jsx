@@ -1,12 +1,13 @@
 import { useState, useEffect, startTransition } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { Home, MessageSquare, Info, SunMoon } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import logoPrp from '../assets/logo-prp.png';
 
 const navLinks = [
-    { name: 'Home', path: '/', icon: '🏠' },
-    { name: 'Feedback', path: '/feedback', icon: '💬' },
-    { name: 'About', path: '/about', icon: 'ℹ️' },
+    { name: 'Home', path: '/', icon: <Home size={18} strokeWidth={1.5} /> },
+    { name: 'Feedback', path: '/feedback', icon: <MessageSquare size={18} strokeWidth={1.5} /> },
+    { name: 'About', path: '/about', icon: <Info size={18} strokeWidth={1.5} /> },
 ];
 
 export default function AppHeader() {
@@ -56,13 +57,12 @@ export default function AppHeader() {
                     <div className="header-theme-toggle">
                         <ThemeToggle />
                     </div>
-                    {/* Hamburger (mobile only) */}
+                    {/* Hamburger (mobile only) - Framer Style 2 Lines */}
                     <button
                         className={`header-hamburger ${menuOpen ? 'open' : ''}`}
                         onClick={() => setMenuOpen((v) => !v)}
                         aria-label="Toggle navigation"
                     >
-                        <span />
                         <span />
                         <span />
                     </button>
@@ -76,13 +76,6 @@ export default function AppHeader() {
                     <div className="mobile-nav-backdrop" onClick={() => setMenuOpen(false)} />
 
                     <div className="mobile-nav-drawer">
-                        {/* Explicit Close Button inside Drawer for better UX */}
-                        <div className="mobile-nav-drawer-header">
-                            <span style={{ fontWeight: 600, color: 'var(--text-muted)', fontSize: '13px', textTransform: 'uppercase', letterSpacing: '0.5px' }}>Menu Navigasi</span>
-                            <button className="mobile-nav-close-btn" onClick={() => setMenuOpen(false)}>
-                                ✕
-                            </button>
-                        </div>
 
                         {navLinks.map((link) => (
                             <Link
@@ -98,7 +91,7 @@ export default function AppHeader() {
 
                         {/* Theme Toggle within Mobile Drawer */}
                         <div className="mobile-nav-theme-toggle">
-                            <span className="mobile-nav-icon">🌗</span>
+                            <span className="mobile-nav-icon" style={{ display: 'flex', alignItems: 'center' }}><SunMoon size={18} strokeWidth={1.5} /></span>
                             <div style={{ flex: 1 }}>Mode Tampilan</div>
                             <ThemeToggle />
                         </div>

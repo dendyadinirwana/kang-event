@@ -18,6 +18,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
   - Menghilangkan judul dan badge redundan pada halaman Checklist Persiapan untuk tampilan yang lebih bersih.
   - Menambahkan fitur *collapsible* (buka/tutup) pada box "Detail Kegiatan" di halaman Checklist.
 - **Guide Page UX**: Memperbaiki tata letak toolbar pencarian dan tombol aksi pada *mobile view* agar tetap berada dalam satu baris (mencegah *wrapping*).
+- **Navigation UI/UX**:
+  - Implementasi *hamburger button* bergaya **Framer** (2-line) dengan animasi transisi *spring/bounce* yang *smooth* menggunakan `cubic-bezier`.
+  - Mengganti seluruh ikon emoji pada navbar dan tab header dengan ikon *outline* dari `lucide-react` untuk tampilan yang lebih profesional dan modern.
+  - Memperbaiki isu *z-index* pada header agar tetap muncul di atas *mobile drawer* saat dibuka.
 
 ---
 

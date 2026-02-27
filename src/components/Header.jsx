@@ -1,3 +1,5 @@
+import { LayoutDashboard, ListChecks, BookOpen } from 'lucide-react';
+
 export default function Header({
     activeTab,
     onTabChange,
@@ -14,12 +16,13 @@ export default function Header({
             </div>
             {showTabs && (
                 <nav className="header-tabs">
-
                     <button
                         className={`header-tab ${activeTab === 'simulasi' ? 'active' : ''}`}
                         onClick={() => onTabChange('simulasi')}
                     >
-                        <span className="header-tab-icon">🎯</span>
+                        <span className="header-tab-icon" style={{ display: 'inline-flex', alignItems: 'center', marginRight: '6px' }}>
+                            <LayoutDashboard size={15} strokeWidth={1.5} />
+                        </span>
                         Simulasi Kegiatan
                     </button>
                     <button
@@ -27,7 +30,9 @@ export default function Header({
                         onClick={() => onTabChange('checklist')}
                         style={{ position: 'relative' }}
                     >
-                        <span className="header-tab-icon">✅</span>
+                        <span className="header-tab-icon" style={{ display: 'inline-flex', alignItems: 'center', marginRight: '6px' }}>
+                            <ListChecks size={15} strokeWidth={1.5} />
+                        </span>
                         Checklist Persiapan
                         {hasChecklist && activeTab !== 'checklist' && (
                             <span style={{ position: 'absolute', top: '6px', right: '6px', width: '7px', height: '7px', borderRadius: '50%', background: '#22c55e' }} />
@@ -37,7 +42,9 @@ export default function Header({
                         className={`header-tab ${activeTab === 'panduan' ? 'active' : ''}`}
                         onClick={() => onTabChange('panduan')}
                     >
-                        <span className="header-tab-icon">📖</span>
+                        <span className="header-tab-icon" style={{ display: 'inline-flex', alignItems: 'center', marginRight: '6px' }}>
+                            <BookOpen size={15} strokeWidth={1.5} />
+                        </span>
                         Panduan Kegiatan
                     </button>
                 </nav>

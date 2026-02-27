@@ -793,7 +793,9 @@
 
     .table-responsive {
       width: 100%;
-      overflow-x: visible;
+      overflow-x: auto;
+      padding-right: 48px;
+      /* space for the absolutely positioned delete button */
       -webkit-overflow-scrolling: touch;
     }
 
@@ -894,6 +896,13 @@
       border-color: #fca5a5;
       /* red-300 */
       transform: translateY(-50%) scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .del-btn {
+        opacity: 1;
+        /* Always visible on mobile since there is no hover */
+      }
     }
 
     tbody td.td-num {

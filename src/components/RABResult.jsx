@@ -2,7 +2,7 @@ import { useState } from 'react';
 
 const rp = (n) => 'Rp ' + Math.round(n).toLocaleString('id-ID');
 
-export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToChecklist, onReset }) {
+export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel, guestClassLabel, onNavigateToChecklist, onReset, onRemoveItem }) {
     const [copySuccess, setCopySuccess] = useState(false);
 
     if (!result) return null;
@@ -89,7 +89,7 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
 
             <div id="rab-container">
                 {sections.map((sec, idx) => (
-                    <RABSection key={idx} section={sec} />
+                    <RABSection key={idx} section={sec} onRemoveItem={onRemoveItem} />
                 ))}
             </div>
 
@@ -156,7 +156,7 @@ export default function RABResult({ result, eventName, kotaLabel, eventTypeLabel
     );
 }
 
-function RABSection({ section }) {
+function RABSection({ section, onRemoveItem }) {
     const [open, setOpen] = useState(true);
     const secTotal = section.items.reduce((a, b) => a + b.total, 0);
 
@@ -188,14 +188,15 @@ function RABSection({ section }) {
                             <tr>
                                 <th style={{ width: '28%' }}>Uraian</th>
                                 <th style={{ width: '10%' }}>Vol</th>
-                                <th style={{ width: '16%' }}>Satuan</th>
-                                <th style={{ width: '22%' }}>Harga Satuan</th>
-                                <th style={{ width: '24%' }}>Total</th>
+                                <th style={{ width: '15%' }}>Satuan</th>
+                                <th style={{ width: '21%' }}>Harga Satuan</th>
+                                <th style={{ width: '22%' }}>Total</th>
+                                <th style={{ width: '4%' }}></th>
                             </tr>
                         </thead>
                         <tbody>
                             {section.items.map((it, i) => (
-                                <tr key={i}>
+                                <tr key={it.key || i} className="rab-row">
                                     <td>
                                         {it.nama}
                                         {it.note && <div className="td-note">{it.note}</div>}
@@ -204,13 +205,23 @@ function RABSection({ section }) {
                                     <td className="td-sat">{it.satuan}</td>
                                     <td className="td-harga">{rp(it.harga)}</td>
                                     <td>{rp(it.total)}</td>
+                                    <td className="td-del">
+                                        <button
+                                            className="del-btn"
+                                            onClick={() => onRemoveItem && onRemoveItem(it.key)}
+                                            title="Hapus item ini dari RAB"
+                                            aria-label={`Hapus ${it.nama}`}
+                                        >
+                                            🗑️
+                                        </button>
+                                    </td>
                                 </tr>
                             ))}
                         </tbody>
                         <tfoot>
                             <tr>
                                 <td colSpan="4">Subtotal {section.label}</td>
-                                <td>{rp(secTotal)}</td>
+                                <td colSpan="2">{rp(secTotal)}</td>
                             </tr>
                         </tfoot>
                     </table>

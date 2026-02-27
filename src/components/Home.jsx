@@ -139,6 +139,27 @@ export default function Home() {
         }, 100);
     };
 
+    const handleRemoveItem = (itemKey) => {
+        if (!result) return;
+
+        let newSections = [];
+        let itemFoundAndRemoved = false;
+
+        for (const sec of result.sections) {
+            const filteredItems = sec.items.filter(it => it.key !== itemKey);
+            if (filteredItems.length < sec.items.length) {
+                itemFoundAndRemoved = true;
+            }
+            if (filteredItems.length > 0) {
+                newSections.push({ ...sec, items: filteredItems });
+            }
+        }
+
+        if (itemFoundAndRemoved) {
+            setResult({ ...result, sections: newSections });
+        }
+    };
+
     const evLabels = {
         seminar: 'Seminar', workshop: 'Workshop', fgd: 'FGD', panel: 'Panel Discussion',
         expo: 'Expo/Pameran', konferensi: 'Konferensi', talkshow: 'Talkshow', rapat: 'Rapat Koordinasi',
@@ -272,6 +293,7 @@ export default function Home() {
                                     window.scrollTo({ top: 0, behavior: 'smooth' });
                                 }}
                                 onReset={handleReset}
+                                onRemoveItem={handleRemoveItem}
                             />
                         )}
                     </div>

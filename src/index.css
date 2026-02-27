@@ -850,6 +850,45 @@
       font-weight: 500;
     }
 
+    /* RAB TABLE ROW HOVER & DELETE BTN */
+    .rab-row {
+      transition: background-color 0.15s ease;
+    }
+
+    .rab-row:hover {
+      background-color: var(--surface2);
+    }
+
+    .td-del {
+      text-align: center !important;
+      padding: 0 4px !important;
+      vertical-align: middle;
+    }
+
+    .del-btn {
+      background: transparent;
+      border: none;
+      font-size: 14px;
+      cursor: pointer;
+      opacity: 0;
+      color: var(--text-muted);
+      transition: all 0.2s ease;
+      padding: 4px;
+      border-radius: 4px;
+    }
+
+    .rab-row:hover .del-btn {
+      opacity: 0.6;
+    }
+
+    .del-btn:hover {
+      opacity: 1 !important;
+      color: #ef4444;
+      /* bright red */
+      background: rgba(239, 68, 68, 0.1);
+      transform: scale(1.1);
+    }
+
     tbody td.td-num {
       text-align: center;
       font-family: var(--font-mono);

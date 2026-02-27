@@ -6,6 +6,10 @@ export default function GuestClass({ guestClass, onChangeClass, guestCounts, onC
     };
 
     const handleCountInput = (key, value) => {
+        if (value === '') {
+            onChangeCounts(key, '');
+            return;
+        }
         let parsed = parseInt(value, 10);
         if (isNaN(parsed) || parsed < 0) parsed = 0;
         if (parsed > MAX_VIP) parsed = MAX_VIP;
@@ -82,8 +86,8 @@ export default function GuestClass({ guestClass, onChangeClass, guestCounts, onC
                                 inputMode="numeric"
                                 min="0"
                                 max={MAX_VIP}
-                                placeholder="Jumlah VVIP"
-                                value={guestCounts.vvip}
+                                placeholder="0"
+                                value={guestCounts.vvip === 0 ? '' : guestCounts.vvip}
                                 onChange={(e) => handleCountInput('vvip', e.target.value)}
                                 autoComplete="off"
                             />
@@ -97,8 +101,8 @@ export default function GuestClass({ guestClass, onChangeClass, guestCounts, onC
                                 inputMode="numeric"
                                 min="0"
                                 max={MAX_VIP}
-                                placeholder="Jumlah VIP"
-                                value={guestCounts.vip}
+                                placeholder="0"
+                                value={guestCounts.vip === 0 ? '' : guestCounts.vip}
                                 onChange={(e) => handleCountInput('vip', e.target.value)}
                                 autoComplete="off"
                             />

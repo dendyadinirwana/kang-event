@@ -100,15 +100,15 @@ export default function Home() {
             setError('Pilih jenis acara dulu ya!');
             return;
         }
-        if (guestClass === 'vvip' && guestCounts.vvip === 0) {
+        if (guestClass === 'vvip' && (guestCounts.vvip === 0 || guestCounts.vvip === '')) {
             setError('Jumlah tamu VVIP harus diisi minimal 1 orang!');
             return;
         }
-        if (guestClass === 'vip' && guestCounts.vip === 0) {
+        if (guestClass === 'vip' && (guestCounts.vip === 0 || guestCounts.vip === '')) {
             setError('Jumlah tamu VIP harus diisi minimal 1 orang!');
             return;
         }
-        if (guestClass === 'campuran' && guestCounts.vvip === 0 && guestCounts.vip === 0) {
+        if (guestClass === 'campuran' && (guestCounts.vvip === 0 || guestCounts.vvip === '') && (guestCounts.vip === 0 || guestCounts.vip === '')) {
             setError('Untuk kelas Campuran, isi minimal jumlah VVIP atau VIP!');
             return;
         }
@@ -116,8 +116,8 @@ export default function Home() {
         const inputData = {
             ...eventData,
             guestClass,
-            vvip: guestCounts.vvip,
-            vip: guestCounts.vip,
+            vvip: guestCounts.vvip || 0,
+            vip: guestCounts.vip || 0,
             ...teamCounts,
             team: supportTeam,
             decorChips: decorations,

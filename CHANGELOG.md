@@ -14,6 +14,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ### Fixed
 - **Mobile Responsive Table**: Memperbaiki susunan CSS `.table-responsive` yang rusak *(stretching)* akibat peletakan action button, mengembalikan fungsionalitas scroll horizontal murni di layar ponsel (< 768px).
+- **Checklist Page UI**:
+  - Menghilangkan judul dan badge redundan pada halaman Checklist Persiapan untuk tampilan yang lebih bersih.
+  - Menambahkan fitur *collapsible* (buka/tutup) pada box "Detail Kegiatan" di halaman Checklist.
+- **Guide Page UX**: Memperbaiki tata letak toolbar pencarian dan tombol aksi pada *mobile view* agar tetap berada dalam satu baris (mencegah *wrapping*).
 
 ---
 

@@ -2,7 +2,7 @@ import { useState, useEffect, startTransition } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Home, MessageSquare, Info, SunMoon } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
-import logoPrp from '../assets/logo-prp.png';
+import logoKemendespdt from '../assets/logo-kemendespdt.png';
 
 const navLinks = [
     { name: 'Home', path: '/', icon: <Home size={18} strokeWidth={1.5} /> },
@@ -35,7 +35,7 @@ export default function AppHeader() {
                 {/* Logo */}
                 <div className="header-left">
                     <Link to="/" className="header-logo-link">
-                        <img src={logoPrp} alt="PRP Logo" className="header-logo" />
+                        <img src={logoKemendespdt} alt="Kementerian Desa Logo" className="header-logo" />
                     </Link>
                 </div>
 

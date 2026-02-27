@@ -3,6 +3,7 @@ import { useState } from 'react';
 export default function ChecklistPage({ checklist, inputData, eventName, kotaLabel, onSwitchToSimulasi }) {
     const [doneState, setDoneState] = useState({});
     const [picState, setPicState] = useState({});
+    const [isDetailOpen, setIsDetailOpen] = useState(true);
 
     const toggleDone = (gIdx, iIdx) => {
         const k = `${gIdx}-${iIdx}`;
@@ -43,14 +44,32 @@ export default function ChecklistPage({ checklist, inputData, eventName, kotaLab
             {/* Info input context */}
             {inputData && (
                 <div className="layout-info no-print" style={{ marginBottom: '20px' }}>
-                    <div className="layout-info-title">📋 Detail Kegiatan</div>
-                    <div className="layout-info-grid">
-                        <div className="linfo-item"><span>Jenis Acara:</span><strong>{inputData.eventType}</strong></div>
-                        <div className="linfo-item"><span>Lokasi:</span><strong>{kotaLabel}</strong></div>
-                        <div className="linfo-item"><span>Peserta:</span><strong>{inputData.peserta} orang</strong></div>
-                        <div className="linfo-item"><span>Panitia:</span><strong>{inputData.panitia} orang</strong></div>
-                        <div className="linfo-item"><span>Narasumber:</span><strong>{inputData.narasumber} orang</strong></div>
-                        <div className="linfo-item"><span>Durasi:</span><strong>{inputData.duration} jam</strong></div>
+                    <div
+                        className="layout-info-title"
+                        style={{ cursor: 'pointer', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
+                        onClick={() => setIsDetailOpen(!isDetailOpen)}
+                        role="button"
+                        aria-expanded={isDetailOpen}
+                        tabIndex={0}
+                        onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); setIsDetailOpen(!isDetailOpen); } }}
+                    >
+                        <span>📋 Detail Kegiatan</span>
+                        <span style={{
+                            fontSize: '12px',
+                            color: 'var(--text-dim)',
+                            transform: isDetailOpen ? 'rotate(180deg)' : '',
+                            transition: 'transform 0.2s'
+                        }}>▼</span>
+                    </div>
+                    <div className={`collapsible-body ${isDetailOpen ? 'show' : ''}`}>
+                        <div className="layout-info-grid" style={{ paddingTop: '14px' }}>
+                            <div className="linfo-item"><span>Jenis Acara:</span><strong>{inputData.eventType}</strong></div>
+                            <div className="linfo-item"><span>Lokasi:</span><strong>{kotaLabel}</strong></div>
+                            <div className="linfo-item"><span>Peserta:</span><strong>{inputData.peserta} orang</strong></div>
+                            <div className="linfo-item"><span>Panitia:</span><strong>{inputData.panitia} orang</strong></div>
+                            <div className="linfo-item"><span>Narasumber:</span><strong>{inputData.narasumber} orang</strong></div>
+                            <div className="linfo-item"><span>Durasi:</span><strong>{inputData.duration} jam</strong></div>
+                        </div>
                     </div>
                 </div>
             )}

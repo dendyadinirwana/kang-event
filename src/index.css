@@ -2328,15 +2328,36 @@
       }
 
       .guide-toolbar {
-        flex-direction: column;
+        /* Keep it as a row, reduce the gap so it fits */
+        flex-direction: row;
+        gap: 6px;
+      }
+
+      .guide-search {
+        padding: 0 8px;
+        /* Slightly tighter padding inside search */
+      }
+
+      .guide-search-icon {
+        margin-right: 4px;
+        /* Move search icon closer to input */
+      }
+
+      .guide-search input {
+        font-size: 12px;
+        padding: 8px 0;
       }
 
       .guide-toolbar-actions {
-        width: 100%;
+        width: auto;
+        gap: 4px;
       }
 
       .guide-toolbar-btn {
-        flex: 1 !important;
+        flex: none !important;
+        padding: 6px 10px !important;
+        font-size: 11px !important;
+        white-space: nowrap;
       }
 
       .guide-section-header {

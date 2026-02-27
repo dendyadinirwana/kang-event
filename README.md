@@ -21,6 +21,7 @@ Aplikasi web berbasis React untuk membantu panitia acara merencanakan kegiatan s
 - Estimasi kebutuhan proyektor dan mic
 - Harga multi-kota (Jakarta, Bandung, Surabaya, Yogyakarta, Medan, Makassar, dan Daerah)
 - **Override harga** — sesuaikan setiap item dengan harga aktual di lapangan
+- **Manajemen RAB Interaktif** — hapus item yang tidak diperlukan langsung dari baris tabel (sistem akan hitung ulang subtotal otomatis)
 - Copy RAB ke clipboard atau Save as PDF
 
 ### 🎒 Seminar Kit Fleksibel
@@ -57,16 +58,18 @@ Aplikasi web berbasis React untuk membantu panitia acara merencanakan kegiatan s
 |-------|-----------|
 | Framework | [React 18](https://react.dev) + [Vite](https://vitejs.dev) |
 | Routing | `react-router-dom` v6 |
+| Iconography | `lucide-react` (SVG Icons) |
 | Styling | Vanilla CSS dengan CSS Variables & cubic-bezier transitions |
 | State | React `useState` (client-only, no backend) |
 | Email API | [Web3Forms](https://web3forms.com) |
+| Analytics | [@vercel/analytics](https://vercel.com/analytics) |
 | Deployment | [Vercel](https://vercel.com) |
 
 ---
 
 ## 🛠️ Development
 
-> **Latest stable release:** v0.6.2 — Mobile Nav UX Hotfix (Backdrop overlay & Close Button).
+> **Latest stable release:** v0.6.4 — RAB Item Deletion & Web Analytics integration.
 
 ```bash
 # Install dependencies

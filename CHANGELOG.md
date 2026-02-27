@@ -6,6 +6,17 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/).
 
 ---
 
+## [0.6.4] - 2026-02-27
+
+### Added
+- **Interactive RAB Management**: Menambahkan fitur "Hapus Item" (Icon `Trash2` dari Lucide React) pada setiap baris hasil RAB. Memungkinkan pengguna menghapus item tertentu secara dinamis, dan sistem akan langsung menghitung ulang grand total dan subtotal.
+- **Web Analytics**: Integrasi `@vercel/analytics` pada level *root* penulisan untuk melacak *page views* pengunjung secara otomatis dan *real-time* di dashboard Vercel.
+
+### Fixed
+- **Mobile Responsive Table**: Memperbaiki susunan CSS `.table-responsive` yang rusak *(stretching)* akibat peletakan action button, mengembalikan fungsionalitas scroll horizontal murni di layar ponsel (< 768px).
+
+---
+
 ## [0.6.3] - 2026-02-27
 
 ### Changed

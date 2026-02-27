@@ -74,16 +74,7 @@ export default function ChecklistPage({ checklist, inputData, eventName, kotaLab
                 </div>
             )}
 
-            {/* Header */}
-            <div className="result-hdr" style={{ marginBottom: '20px' }}>
-                <div className="result-title">{eventName || 'Checklist Persiapan'}</div>
-                <div className="result-meta">
-                    {kotaLabel && <span className="badge badge-accent">{kotaLabel}</span>}
-                    {inputData?.eventType && (
-                        <span className="badge badge-gold">{inputData.eventType}</span>
-                    )}
-                </div>
-            </div>
+
 
             {/* Progress bar */}
             <div className="card" style={{ marginBottom: '20px', padding: '16px 20px' }}>

@@ -215,7 +215,7 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     if (mejaPesertaJml > 0) furn.push(row('meja_peserta', kota, mejaPesertaJml * hari, overrides, 'unit/hari'));
     if (mejaNSJml > 0) furn.push(row('meja_narasumber', kota, mejaNSJml * hari, overrides, 'unit/hari'));
     if (hasVIP && kursiVIPJml > 0) furn.push(row('kursi_vip', kota, kursiVIPJml * hari, overrides, 'unit/hari', 'kursi VIP'));
-    if (hasVVIP && kursiVVIPJml > 0) furn.push({ ...row('kursi_vip', kota, kursiVVIPJml * hari, overrides, 'unit/hari'), nama: 'Kursi VVIP / Sofa Eksekutif (sewa)', harga: h(kota, 'kursi_vip', overrides) * 1.5, total: h(kota, 'kursi_vip', overrides) * 1.5 * kursiVVIPJml * hari, note: 'harga VVIP +50%' });
+    if (hasVVIP && kursiVVIPJml > 0) furn.push({ ...row('kursi_vip', kota, kursiVVIPJml * hari, overrides, 'unit/hari'), key: 'kursi_vvip', nama: 'Kursi VVIP / Sofa Eksekutif (sewa)', harga: h(kota, 'kursi_vip', overrides) * 1.5, total: h(kota, 'kursi_vip', overrides) * 1.5 * kursiVVIPJml * hari, note: 'harga VVIP +50%' });
     if (evType !== 'gala') furn.push(row('podium', kota, hari, overrides));
     if (team.includes('registrasi')) furn.push(row('meja_registrasi', kota, 2 * hari, overrides, 'unit/hari', '2 meja registrasi'));
     if (decorChips.includes('karpet_merah') || hasVVIP) furn.push(row('karpet', kota, 10, overrides, 'm/hari', 'karpet merah protokol'));
@@ -275,7 +275,7 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     sections.push({ label: '🪑 Furniture & Tata Ruang', items: furn });
 
     const decor = [];
-    decor.push({ ...row('backdrop', kota, backdropW * backdropH, overrides, 'm²'), nama: `Backdrop Utama ${backdropW}×${backdropH}m (produksi)`, note: `ukuran ${backdropW}×${backdropH} meter` });
+    decor.push({ ...row('backdrop', kota, backdropW * backdropH, overrides, 'm²'), key: 'backdrop_utama', nama: `Backdrop Utama ${backdropW}×${backdropH}m (produksi)`, note: `ukuran ${backdropW}×${backdropH} meter` });
     decor.push(row('spanduk', kota, spandukJml * 6, overrides, 'm²', `${spandukJml} spanduk @2×3m`));
     decor.push(row('meja_backdrop', kota, 1, overrides));
     if (decorChips.includes('standing_flower') || hasVVIP) decor.push(row('standing_flower', kota, hasVVIP ? 6 : 4, overrides, 'rangkaian'));
@@ -288,16 +288,16 @@ export function buildRAB(input, overrides = {}, seminarKitData = {}) {
     const sdm = [];
     // SBM: narasumber per OJ (1 OJ = 60 menit), assumed 2 OJ per session per hari
     const ojPerHari = 2;
-    if (narasumber > 0) sdm.push({ ...row('narasumber_honor', kota, narasumber * ojPerHari * hari, overrides, 'OJ'), note: `${narasumber} narasumber × ${ojPerHari} OJ/hari × ${hari} hari` });
+    if (narasumber > 0) sdm.push({ ...row('narasumber_honor', kota, narasumber * ojPerHari * hari, overrides, 'OJ'), key: 'narasumber_honor', note: `${narasumber} narasumber × ${ojPerHari} OJ/hari × ${hari} hari` });
     // SBM: moderator, MC, panitia per kegiatan (flat per event day)
-    if (moderator > 0) sdm.push({ ...row('moderator_honor', kota, moderator * hari, overrides, 'orang/kegiatan'), note: `${moderator} moderator × ${hari} hari` });
-    if (mc > 0) sdm.push({ ...row('mc_honor', kota, mc * hari, overrides, 'orang/kegiatan'), note: `${mc} MC × ${hari} hari` });
-    if (panitia > 0) sdm.push({ ...row('panitia_honor', kota, panitia * hari, overrides, 'orang/kegiatan'), note: `${panitia} panitia × ${hari} hari` });
-    if (team.includes('asrot')) sdm.push({ ...row('operator_honor', kota, 2 * hari, overrides, 'orang/kegiatan'), note: '2 operator teknis' });
+    if (moderator > 0) sdm.push({ ...row('moderator_honor', kota, moderator * hari, overrides, 'orang/kegiatan'), key: 'moderator_honor', note: `${moderator} moderator × ${hari} hari` });
+    if (mc > 0) sdm.push({ ...row('mc_honor', kota, mc * hari, overrides, 'orang/kegiatan'), key: 'mc_honor', note: `${mc} MC × ${hari} hari` });
+    if (panitia > 0) sdm.push({ ...row('panitia_honor', kota, panitia * hari, overrides, 'orang/kegiatan'), key: 'panitia_honor', note: `${panitia} panitia × ${hari} hari` });
+    if (team.includes('asrot')) sdm.push({ ...row('operator_honor', kota, 2 * hari, overrides, 'orang/kegiatan'), key: 'operator_honor', note: '2 operator teknis' });
     if (team.includes('fotografer')) sdm.push(row('fotografer_honor', kota, 1 * hari, overrides));
     if (team.includes('videografer')) sdm.push(row('videografer_honor', kota, 1 * hari, overrides));
     if (team.includes('interpreter')) sdm.push(row('interpreter_honor', kota, 1 * hari, overrides));
-    if (team.includes('notulen')) sdm.push({ ...row('notulen_honor', kota, 1 * hari, overrides, 'orang/kegiatan'), note: '1 notulen' });
+    if (team.includes('notulen')) sdm.push({ ...row('notulen_honor', kota, 1 * hari, overrides, 'orang/kegiatan'), key: 'notulen_honor', note: '1 notulen' });
     if (team.includes('keamanan')) sdm.push(row('keamanan_honor', kota, 3 * hari, overrides, 'orang/hari', '3 petugas keamanan'));
 
     // Filter out any nulls

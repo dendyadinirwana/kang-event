@@ -740,7 +740,7 @@
       border-radius: var(--radius);
       margin-bottom: 14px;
       box-shadow: var(--shadow);
-      overflow: hidden;
+      /* Removed overflow: hidden so absolutely positioned buttons render safely outside bounds */
     }
 
     .rab-section-hdr {
@@ -752,6 +752,7 @@
       gap: 8px;
       cursor: pointer;
       user-select: none;
+      border-radius: calc(var(--radius) - 1px) calc(var(--radius) - 1px) 0 0;
     }
 
     .rab-section-hdr:hover {
@@ -914,6 +915,14 @@
       border-bottom: none;
     }
 
+    tbody tr:last-child td:first-child {
+      border-bottom-left-radius: calc(var(--radius) - 1px);
+    }
+
+    tbody tr:last-child td:last-child {
+      border-bottom-right-radius: calc(var(--radius) - 1px);
+    }
+
     tbody tr:hover {
       background: var(--hover-surface);
     }
@@ -935,12 +944,18 @@
       font-weight: 600;
       background: var(--surface2);
       border-top: 2px solid var(--border);
+      border-radius: 0 0 calc(var(--radius) - 1px) calc(var(--radius) - 1px);
     }
 
     tfoot td:last-child {
       text-align: right;
       font-family: var(--font-mono);
       color: var(--accent);
+      border-radius: 0 0 calc(var(--radius) - 1px) 0;
+    }
+
+    tfoot td:first-child {
+      border-radius: 0 0 0 calc(var(--radius) - 1px);
     }
 
     /* GRAND TOTAL */
